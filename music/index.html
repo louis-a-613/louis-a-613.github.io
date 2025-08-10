@@ -83,42 +83,42 @@ body.custom-background { background-color: #0a0a0a; }
     margin: 0 !important;
 }
 
-.main-navigation {
-    background-color: #000000 !important; /* Black menu bar */
-}
-
-.main-navigation .container { /* If your theme wraps menu in .container, make it full-width too */
-    width: 100% !important;
-    max-width: none !important;
-    padding: 0 !important;
-}
-
 .main-navigation a {
     color: #FF0000 !important; /* Red text for all menu items */
 }
 
-.main-navigation .current-menu-item,
-.main-navigation .current-menu-item a {
-    background-color: transparent !important; /* Remove pink (or any) background on active item like Connect */
-    color: #FF0000 !important; /* Keep active text red */
-}
-
+/* Shared button styles */
 .main-navigation ul.nav-menu > li:last-child > a {
-    background-color: transparent !important; /* Remove pink background */
-    color: #FF0000 !important; /* Set text to red, matching other items */
-    border-radius: 0 !important; /* Optional: Remove rounded corners if you don't want button look */
-    margin: 0 !important; /* Optional: Remove extra margin for alignment */
+    background-color: transparent !important;
+    color: #FF0000 !important;
+    display: inline-block !important;
+    line-height: 1.5 !important;
 }
 
-.main-navigation .current-menu-item:hover,
-.main-navigation .current-menu-item a:hover,
-.main-navigation li:hover > a {
-    background-color: transparent !important; /* Ensure no background on hover for active or normal items */
+/* Desktop: Larger, rounded if desired */
+@media (min-width: 768px) {
+    .main-navigation ul.nav-menu > li:last-child > a {
+        padding: 33.5px 6px !important;
+        border-radius: 0 !important;
+        margin: 0px !important;
+    }
+}
+
+/* Mobile: Smaller, flat for touch */
+@media (max-width: 767px) {
+    .main-navigation ul.nav-menu > li:last-child > a {
+        padding: 16.5px 22px !important;
+        border-radius: 0px !important;
+        margin: 0px 0px !important;
+			  width: 100% 
+!important; 
+        box-sizing: border-box !important;
+    }
 }
 
 #scroll-top,
 .backtotop {
-    display: none !important; /* Hides the button completely */
+    display: none !important;
 }
 
 .site-info {
@@ -131,7 +131,7 @@ body.custom-background { background-color: #0a0a0a; }
 <div id="page" class="site"><a class="skip-link screen-reader-text" href="#content">Skip to content</a>		<header id="masthead" class="site-header" role="banner">    <div class="wrapper">
         <div class="site-branding">
             <div class="site-logo">
-                                    <a href="/" class="custom-logo-link" rel="home"><img width="760" height="376" src="/wp-content/uploads/2025/08/cropped-Louis-%CE%9B.png" class="custom-logo" alt="Louis &Lambda;" decoding="async" fetchpriority="high" srcset="/wp-content/uploads/2025/08/cropped-Louis-&Lambda;.png 760w, /wp-content/uploads/2025/08/cropped-Louis-&Lambda;-300x148.png 300w" sizes="(max-width: 760px) 100vw, 760px"></a>                            </div><!-- .site-logo -->
+                                    <a href="/" class="custom-logo-link" rel="home"><img width="760" height="376" src="/wp-content/uploads/2025/08/louis-a.png" class="custom-logo" alt="Louis &Lambda;" decoding="async" fetchpriority="high" srcset="/wp-content/uploads/2025/08/louis-a.png 760w, /wp-content/uploads/2025/08/louis-a-300x148.png 300w" sizes="(max-width: 760px) 100vw, 760px"></a>                            </div><!-- .site-logo -->
 
             <div id="site-identity">
                 <h1 class="site-title">
