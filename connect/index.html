@@ -105,7 +105,8 @@ body.custom-background { background-color: #0a0a0a; }
 <meta name="msapplication-TileImage" content="/wp-content/uploads/2025/08/cropped-favicon-270x270.png">
 		<style type="text/css" id="wp-custom-css">
 			.site-header {
-    background-color: #000000 !important; /* Ensure header (parent of menu) is black and full-width as fallback */
+    background-color: #000000 !important;
+    position: fixed !important;
     width: 100% !important;
     max-width: none !important;
     padding: 0 !important;
@@ -113,7 +114,7 @@ body.custom-background { background-color: #0a0a0a; }
 }
 
 .main-navigation a {
-    color: #FF0000 !important; /* Red text for all menu items */
+    color: #FF0000 !important;
 }
 
 /* Shared button styles */
@@ -125,7 +126,10 @@ body.custom-background { background-color: #0a0a0a; }
 }
 
 /* Desktop: Larger, rounded if desired */
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
+	.site-content {
+        padding-top: 88.5px !important;
+    }
     .main-navigation ul.nav-menu > li:last-child > a {
         padding: 33.5px 6px !important;
         border-radius: 0 !important;
@@ -133,8 +137,11 @@ body.custom-background { background-color: #0a0a0a; }
     }
 }
 
-/* Mobile: Smaller, flat for touch */
-@media (max-width: 767px) {
+/* Tablet: Medium, flat for touch */
+@media (min-width: 481px) and (max-width: 1023px) {
+	.site-content {
+        padding-top: 80px !important;
+    }
     .main-navigation ul.nav-menu > li:last-child > a {
         padding: 16.5px 22px !important;
         border-radius: 0px !important;
@@ -143,6 +150,25 @@ body.custom-background { background-color: #0a0a0a; }
 !important; 
         box-sizing: border-box !important;
     }
+}
+
+/* Mobile: Smaller, flat for touch */
+@media (max-width: 480px) {
+	.site-content {
+        padding-top: 190px !important;
+    }
+    .main-navigation ul.nav-menu > li:last-child > a {
+        padding: 16.5px 22px !important;
+        border-radius: 0px !important;
+        margin: 0px 0px !important;
+			  width: 100% 
+!important; 
+        box-sizing: border-box !important;
+    }
+}
+
+.home .page-section {
+    padding: 0px 0;
 }
 
 #scroll-top,
