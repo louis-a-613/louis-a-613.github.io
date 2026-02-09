@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://louis-a.com/sitemap.xml
