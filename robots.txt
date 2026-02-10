@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /thanks/
 
 Sitemap: https://louis-a.com/sitemap.xml
