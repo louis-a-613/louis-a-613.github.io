@@ -213,6 +213,11 @@ body.custom-background { background-color: #0a0a0a; }
 
 .site-info {
     display: none !important;
+}
+
+.wp-block-button__link {
+  background-color: #ff0000 !important; 
+  color: #ffffff !important;
 }		</style>
 		<style id="core-block-supports-inline-css" type="text/css">
 .wp-container-core-social-links-is-layout-16018d1d{justify-content:center;}.wp-container-core-columns-is-layout-9d6595d7{flex-wrap:nowrap;}
@@ -294,16 +299,30 @@ body.custom-background { background-color: #0a0a0a; }
 
 
 
-<form action="https://formspree.io/f/mreaezlq" method="POST" style="max-width: 600px; margin: 0 auto; padding: 20px; background: #00000000; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.5); color: #fff;" autocomplete="off">
+<!-- Formspark Contact Form with Invisible reCAPTCHA v2 -->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<form action="https://submit-form.com/bpGjiVlC7" method="POST" style="max-width: 600px; margin: 0 auto; padding: 20px; background: transparent; border-radius: 8px; color: #fff;" autocomplete="off">
   <label for="name" style="display: block; margin-bottom: 5px; font-weight: bold;">Your Name:</label>
   <input type="text" id="name" name="name" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #555; border-radius: 4px; box-sizing: border-box; background: #333; color: #fff;" autocomplete="off">
+
   <label for="email" style="display: block; margin-bottom: 5px; font-weight: bold;">Your Email:</label>
   <input type="email" id="email" name="_replyto" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #555; border-radius: 4px; box-sizing: border-box; background: #333; color: #fff;" autocomplete="off">
+
   <label for="message" style="display: block; margin-bottom: 5px; font-weight: bold;">Message:</label>
   <textarea id="message" name="message" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #555; border-radius: 4px; box-sizing: border-box; min-height: 100px; background: #333; color: #fff;" autocomplete="off"></textarea>
-  <input type="hidden" name="_subject" value="New Contact from louis-a.com">
-  <button type="submit" style="width: 100%; padding: 10px; background: #FF0000; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Send</button>
+
+  <!-- Hidden fields for Formspark -->
+  <input type="hidden" name="_email.subject" value="New Contact from louis-a.com">
+  <input type="hidden" name="_redirect" value="https://louis-a.com/thanks">
+  <input type="text" name="phone" style="display:none;"> <!-- Honeypot for spam -->
+
+  <button type="submit" class="g-recaptcha" data-sitekey="6Ld_imcsAAAAAJ1K6j5-SVMmPRvDTeYgighANSoQ" data-callback="onSubmit" style="width: 100%; padding: 10px; background: #ff0000; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Send</button>
 </form>
+<script>
+function onSubmit(token) {
+  document.querySelector('form').submit();
+}
+</script>
 
 
 
@@ -316,9 +335,7 @@ body.custom-background { background-color: #0a0a0a; }
 	</div><!-- #primary -->
 
 	<aside id="secondary" class="widget-area" role="complementary">
-		<aside id="block-2" class="widget widget_block widget_search"><form role="search" method="get" action="/" class="wp-block-search__button-outside wp-block-search__text-button wp-block-search"><label class="wp-block-search__label" for="wp-block-search__input-1">Search</label><div class="wp-block-search__inside-wrapper"><input class="wp-block-search__input" id="wp-block-search__input-1" placeholder="" value="" type="search" name="s" required><button aria-label="Search" class="wp-block-search__button wp-element-button" type="submit">Search</button></div></form></aside><aside id="block-3" class="widget widget_block"><div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"><h2 class="wp-block-heading">Recent Posts</h2><ul class="wp-block-latest-posts__list wp-block-latest-posts"><li><a class="wp-block-latest-posts__post-title" href="/hello-world/">Hello world!</a></li>
-</ul></div></div></aside><aside id="block-4" class="widget widget_block"><div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"><h2 class="wp-block-heading">Recent Comments</h2><div class="no-comments wp-block-latest-comments">No comments to show.</div></div></div></aside><aside id="block-5" class="widget widget_block"><div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"><h2 class="wp-block-heading">Archives</h2><ul class="wp-block-archives-list wp-block-archives">	<li><a href="/2025/08/">August 2025</a></li>
-</ul></div></div></aside><aside id="block-6" class="widget widget_block">
+		<aside id="block-2" class="widget widget_block widget_search"><form role="search" method="get" action="/" class="wp-block-search__button-outside wp-block-search__text-button wp-block-search"><label class="wp-block-search__label" for="wp-block-search__input-1">Search</label><div class="wp-block-search__inside-wrapper"><input class="wp-block-search__input" id="wp-block-search__input-1" placeholder="" value="" type="search" name="s" required><button aria-label="Search" class="wp-block-search__button wp-element-button" type="submit">Search</button></div></form></aside><aside id="block-3" class="widget widget_block"><div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"><h2 class="wp-block-heading">Recent Posts</h2><ul class="wp-block-latest-posts__list wp-block-latest-posts"></ul></div></div></aside><aside id="block-4" class="widget widget_block"><div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"><h2 class="wp-block-heading">Recent Comments</h2><div class="no-comments wp-block-latest-comments">No comments to show.</div></div></div></aside><aside id="block-5" class="widget widget_block"><div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"><h2 class="wp-block-heading">Archives</h2><div class="wp-block-archives-list wp-block-archives">No archives to show.</div></div></div></aside><aside id="block-6" class="widget widget_block">
 <div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"></div></div>
 </aside>	</aside><!-- #secondary -->
 </div>		</div>
