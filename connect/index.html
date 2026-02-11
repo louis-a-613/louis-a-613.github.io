@@ -218,6 +218,10 @@ body.custom-background { background-color: #0a0a0a; }
 .wp-block-button__link {
   background-color: #ff0000 !important; 
   color: #ffffff !important;
+}
+
+.grecaptcha-badge {
+	visibility:hidden;
 }		</style>
 		<style id="core-block-supports-inline-css" type="text/css">
 .wp-container-core-social-links-is-layout-16018d1d{justify-content:center;}.wp-container-core-columns-is-layout-9d6595d7{flex-wrap:nowrap;}
@@ -317,6 +321,7 @@ body.custom-background { background-color: #0a0a0a; }
   <input type="text" name="phone" style="display:none;"> <!-- Honeypot for spam -->
 
   <button type="submit" class="g-recaptcha" data-sitekey="6Ld_imcsAAAAAJ1K6j5-SVMmPRvDTeYgighANSoQ" data-callback="onSubmit" style="width: 100%; padding: 10px; background: #ff0000; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Send</button>
+<p style="font-size: 12px; color: #ccc; text-align: center; margin-top: 10px;">This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" style="color: #ff0000;">Privacy Policy</a> and <a href="https://policies.google.com/terms" style="color: #ff0000;">Terms of Service</a> apply.</p>
 </form>
 <script>
 function onSubmit(token) {
