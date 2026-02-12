@@ -25,6 +25,37 @@
 }
 </script>
 
+<script>
+  function goToSlide(index) {
+    if (window.carousel && window.carousel.slideTo) {
+      window.carousel.slideTo(index);
+    } else {
+      console.error('Carousel not ready yet - try again');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const outerContainer = document.querySelector('.wp-block-cb-carousel-v2');
+    let attempts = 0;
+    const maxAttempts = 20;
+
+    const pollForSwiper = setInterval(() => {
+      const swiperEl = outerContainer ? outerContainer.querySelector('.swiper') : null;
+      window.carousel = swiperEl ? swiperEl.swiper : null;
+
+      if (window.carousel) {
+        goToSlide(6);
+        console.log('Swiper instance found!');
+        clearInterval(pollForSwiper);
+      } else if (attempts >= maxAttempts) {
+        console.error('Swiper instance not found after max attempts');
+        clearInterval(pollForSwiper);
+      }
+      attempts++;
+    }, 100);
+  });
+</script>
+
 <meta name="robots" content="max-image-preview:large">
 <link rel="dns-prefetch" href="//fonts.googleapis.com">
 <link rel="alternate" type="application/rss+xml" title="Louis Λ » Feed" href="/feed/">
@@ -55,6 +86,14 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 
 /*# sourceURL=wp-block-library-inline-css */
 </style>
+<style id="wp-block-accordion-inline-css" type="text/css">
+.wp-block-accordion{box-sizing:border-box}
+/*# sourceURL=/wp-includes/blocks/accordion/style.min.css */
+</style>
+<style id="wp-block-accordion-item-inline-css" type="text/css">
+.wp-block-accordion-item.is-open>.wp-block-accordion-heading .wp-block-accordion-heading__toggle-icon{transform:rotate(45deg)}@media (prefers-reduced-motion:no-preference){.wp-block-accordion-item{transition:grid-template-rows .3s ease-out}.wp-block-accordion-item>.wp-block-accordion-heading .wp-block-accordion-heading__toggle-icon{transition:transform .2s ease-in-out}}
+/*# sourceURL=/wp-includes/blocks/accordion-item/style.min.css */
+</style>
 <style id="wp-block-archives-inline-css" type="text/css">
 .wp-block-archives{box-sizing:border-box}.wp-block-archives-dropdown label{display:block}
 /*# sourceURL=/wp-includes/blocks/archives/style.min.css */
@@ -79,6 +118,18 @@ ol.wp-block-latest-comments{box-sizing:border-box;margin-left:0}:where(.wp-block
 .wp-block-search .wp-block-search__label{font-weight:700}.wp-block-search__button{border:1px solid #ccc;padding:.375em .625em}
 /*# sourceURL=/wp-includes/blocks/search/theme.min.css */
 </style>
+<style id="wp-block-accordion-heading-inline-css" type="text/css">
+.wp-block-accordion-heading__toggle{align-items:center;background:none;border:none;color:inherit;cursor:pointer;display:flex;font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;letter-spacing:inherit;line-height:inherit;overflow:hidden;padding:var(--wp--preset--spacing--20,1em) 0;text-align:inherit;text-decoration:inherit;text-transform:inherit;width:100%;word-spacing:inherit}.wp-block-accordion-heading__toggle:not(:focus-visible){outline:none}.wp-block-accordion-heading__toggle:hover .wp-block-accordion-heading__toggle-title{text-decoration:underline}.wp-block-accordion-heading__toggle-title{flex:1}.wp-block-accordion-heading__toggle-icon{align-items:center;display:flex;height:1.2em;justify-content:center;width:1.2em}
+/*# sourceURL=/wp-includes/blocks/accordion-heading/style.min.css */
+</style>
+<style id="wp-block-accordion-panel-inline-css" type="text/css">
+.wp-block-accordion-panel[aria-hidden=true],.wp-block-accordion-panel[inert]{display:none;margin-block-start:0}
+/*# sourceURL=/wp-includes/blocks/accordion-panel/style.min.css */
+</style>
+<style id="wp-block-columns-inline-css" type="text/css">
+.wp-block-columns{box-sizing:border-box;display:flex;flex-wrap:wrap!important}@media (min-width:782px){.wp-block-columns{flex-wrap:nowrap!important}}.wp-block-columns{align-items:normal!important}.wp-block-columns.are-vertically-aligned-top{align-items:flex-start}.wp-block-columns.are-vertically-aligned-center{align-items:center}.wp-block-columns.are-vertically-aligned-bottom{align-items:flex-end}@media (max-width:781px){.wp-block-columns:not(.is-not-stacked-on-mobile)>.wp-block-column{flex-basis:100%!important}}@media (min-width:782px){.wp-block-columns:not(.is-not-stacked-on-mobile)>.wp-block-column{flex-basis:0;flex-grow:1}.wp-block-columns:not(.is-not-stacked-on-mobile)>.wp-block-column[style*=flex-basis]{flex-grow:0}}.wp-block-columns.is-not-stacked-on-mobile{flex-wrap:nowrap!important}.wp-block-columns.is-not-stacked-on-mobile>.wp-block-column{flex-basis:0;flex-grow:1}.wp-block-columns.is-not-stacked-on-mobile>.wp-block-column[style*=flex-basis]{flex-grow:0}:where(.wp-block-columns){margin-bottom:1.75em}:where(.wp-block-columns.has-background){padding:1.25em 2.375em}.wp-block-column{flex-grow:1;min-width:0;overflow-wrap:break-word;word-break:break-word}.wp-block-column.is-vertically-aligned-top{align-self:flex-start}.wp-block-column.is-vertically-aligned-center{align-self:center}.wp-block-column.is-vertically-aligned-bottom{align-self:flex-end}.wp-block-column.is-vertically-aligned-stretch{align-self:stretch}.wp-block-column.is-vertically-aligned-bottom,.wp-block-column.is-vertically-aligned-center,.wp-block-column.is-vertically-aligned-top{width:100%}
+/*# sourceURL=/wp-includes/blocks/columns/style.min.css */
+</style>
 <style id="wp-block-embed-inline-css" type="text/css">
 .wp-block-embed.alignleft,.wp-block-embed.alignright,.wp-block[data-align=left]>[data-type="core/embed"],.wp-block[data-align=right]>[data-type="core/embed"]{max-width:360px;width:100%}.wp-block-embed.alignleft .wp-block-embed__wrapper,.wp-block-embed.alignright .wp-block-embed__wrapper,.wp-block[data-align=left]>[data-type="core/embed"] .wp-block-embed__wrapper,.wp-block[data-align=right]>[data-type="core/embed"] .wp-block-embed__wrapper{min-width:280px}.wp-block-cover .wp-block-embed{min-height:240px;min-width:320px}.wp-block-embed{overflow-wrap:break-word}.wp-block-embed :where(figcaption){margin-bottom:1em;margin-top:.5em}.wp-block-embed iframe{max-width:100%}.wp-block-embed__wrapper{position:relative}.wp-embed-responsive .wp-has-aspect-ratio .wp-block-embed__wrapper:before{content:"";display:block;padding-top:50%}.wp-embed-responsive .wp-has-aspect-ratio iframe{bottom:0;height:100%;left:0;position:absolute;right:0;top:0;width:100%}.wp-embed-responsive .wp-embed-aspect-21-9 .wp-block-embed__wrapper:before{padding-top:42.85%}.wp-embed-responsive .wp-embed-aspect-18-9 .wp-block-embed__wrapper:before{padding-top:50%}.wp-embed-responsive .wp-embed-aspect-16-9 .wp-block-embed__wrapper:before{padding-top:56.25%}.wp-embed-responsive .wp-embed-aspect-4-3 .wp-block-embed__wrapper:before{padding-top:75%}.wp-embed-responsive .wp-embed-aspect-1-1 .wp-block-embed__wrapper:before{padding-top:100%}.wp-embed-responsive .wp-embed-aspect-9-16 .wp-block-embed__wrapper:before{padding-top:177.77%}.wp-embed-responsive .wp-embed-aspect-1-2 .wp-block-embed__wrapper:before{padding-top:200%}
 /*# sourceURL=/wp-includes/blocks/embed/style.min.css */
@@ -95,14 +146,25 @@ ol.wp-block-latest-comments{box-sizing:border-box;margin-left:0}:where(.wp-block
 :where(.wp-block-group.has-background){padding:1.25em 2.375em}
 /*# sourceURL=/wp-includes/blocks/group/theme.min.css */
 </style>
+<style id="wp-block-paragraph-inline-css" type="text/css">
+.is-small-text{font-size:.875em}.is-regular-text{font-size:1em}.is-large-text{font-size:2.25em}.is-larger-text{font-size:3em}.has-drop-cap:not(:focus):first-letter{float:left;font-size:8.4em;font-style:normal;font-weight:100;line-height:.68;margin:.05em .1em 0 0;text-transform:uppercase}body.rtl .has-drop-cap:not(:focus):first-letter{float:none;margin-left:.1em}p.has-drop-cap.has-background{overflow:hidden}:root :where(p.has-background){padding:1.25em 2.375em}:where(p.has-text-color:not(.has-link-color)) a{color:inherit}p.has-text-align-left[style*="writing-mode:vertical-lr"],p.has-text-align-right[style*="writing-mode:vertical-rl"]{rotate:180deg}
+/*# sourceURL=/wp-includes/blocks/paragraph/style.min.css */
+</style>
 
 <style id="classic-theme-styles-inline-css" type="text/css">
 /*! This file is auto-generated */
 .wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
 /*# sourceURL=/wp-includes/css/classic-themes.min.css */
 </style>
+<style id="cb-carousel-v2-style-inline-css" type="text/css">
+.wp-block-cb-carousel-v2{position:relative}.wp-block-cb-carousel-v2[data-cb-pagination=true] .swiper-horizontal{margin-bottom:calc(var(--wp--custom--carousel-block--pagination-bullet-size, 8px)*4)}.wp-block-cb-carousel-v2 .cb-button-next,.wp-block-cb-carousel-v2 .cb-button-prev{color:var(--wp--custom--carousel-block--navigation-color,#000);height:var(--wp--custom--carousel-block--navigation-size,22px);margin-top:calc(0px - var(--wp--custom--carousel-block--navigation-size, 22px)/2);width:calc(var(--wp--custom--carousel-block--navigation-size, 22px)/44*27)}.wp-block-cb-carousel-v2 .cb-button-next:after,.wp-block-cb-carousel-v2 .cb-button-prev:after{font-size:var(--wp--custom--carousel-block--navigation-size,22px)}.wp-block-cb-carousel-v2 .cb-button-next:hover,.wp-block-cb-carousel-v2 .cb-button-prev:hover{color:var(--wp--custom--carousel-block--navigation-hover-color,var(--wp--custom--carousel-block--navigation-color,#000))}.wp-block-cb-carousel-v2 .cb-button-prev,.wp-block-cb-carousel-v2.cb-rtl .cb-button-next{left:calc(var(--wp--custom--carousel-block--navigation-size, 22px)*-1/44*27 - var(--wp--custom--carousel-block--navigation-sides-offset, 10px));right:auto}.wp-block-cb-carousel-v2 .cb-button-next,.wp-block-cb-carousel-v2.cb-rtl .cb-button-prev{left:auto;right:calc(var(--wp--custom--carousel-block--navigation-size, 22px)*-1/44*27 - var(--wp--custom--carousel-block--navigation-sides-offset, 10px))}.wp-block-cb-carousel-v2.cb-rtl .cb-button-next,.wp-block-cb-carousel-v2.cb-rtl .cb-button-prev{transform:scaleX(-1)}.wp-block-cb-carousel-v2 .cb-pagination.swiper-pagination-horizontal{bottom:var(--wp--custom--carousel-block--pagination-bottom,-20px);display:flex;justify-content:center;top:var(--wp--custom--carousel-block--pagination-top,auto)}.wp-block-cb-carousel-v2 .cb-pagination.swiper-pagination-horizontal.swiper-pagination-bullets .cb-pagination-bullet{margin:0 var(--wp--custom--carousel-block--pagination-bullet-horizontal-gap,4px)}.wp-block-cb-carousel-v2 .cb-pagination .cb-pagination-bullet{background:var(--wp--custom--carousel-block--pagination-bullet-color,var(--wp--custom--carousel-block--pagination-bullet-inactive-color,#000));height:var(--wp--custom--carousel-block--pagination-bullet-size,8px);opacity:var(--wp--custom--carousel-block--pagination-bullet-inactive-opacity,var(--wp--custom--carousel-block--pagination-bullet-opacity,.2));width:var(--wp--custom--carousel-block--pagination-bullet-size,8px)}.wp-block-cb-carousel-v2 .cb-pagination .cb-pagination-bullet.swiper-pagination-bullet-active{background:var(--wp--custom--carousel-block--pagination-bullet-active-color,#000);opacity:var(--wp--custom--carousel-block--pagination-bullet-active-opacity,1)}.wp-block-cb-carousel-v2 .cb-pagination .cb-pagination-bullet:not(.swiper-pagination-bullet-active):hover{background:var(--wp--custom--carousel-block--pagination-bullet-hover-color,var(--wp--custom--carousel-block--pagination-bullet-inactive-hover-color,var(--wp--custom--carousel-block--pagination-bullet-active-color,#000)));opacity:var(--wp--custom--carousel-block--pagination-bullet-inactive-hover-opacity,var(--wp--custom--carousel-block--pagination-bullet-inactive-opacity,.2))}.wp-block-cb-carousel-v2.alignfull .cb-button-next,.wp-block-cb-carousel-v2.alignfull .cb-button-prev{color:var(--wp--custom--carousel-block--navigation-alignfull-color,#000)}.wp-block-cb-carousel-v2.alignfull .cb-button-prev,.wp-block-cb-carousel-v2.alignfull.cb-rtl .cb-button-next{left:var(--wp--custom--carousel-block--navigation-sides-offset,10px);right:auto}.wp-block-cb-carousel-v2.alignfull .cb-button-next,.wp-block-cb-carousel-v2.alignfull.cb-rtl .cb-button-prev{left:auto;right:var(--wp--custom--carousel-block--navigation-sides-offset,10px)}.wp-block-cb-carousel-v2 .wp-block-image{margin-bottom:var(--wp--custom--carousel-block--image-margin-bottom,0);margin-top:var(--wp--custom--carousel-block--image-margin-top,0)}.wp-block-cb-carousel-v2 .wp-block-cover{margin-bottom:var(--wp--custom--carousel-block--cover-margin-bottom,0);margin-top:var(--wp--custom--carousel-block--cover-margin-top,0)}.wp-block-cb-carousel-v2 .wp-block-cover.aligncenter,.wp-block-cb-carousel-v2 .wp-block-image.aligncenter{margin-left:auto!important;margin-right:auto!important}
+
+/*# sourceURL=/wp-content/plugins/carousel-block/build/carousel/style-index.css */
+</style>
+
 <style id="global-styles-inline-css" type="text/css">
 :root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--color--tan: #E6DBAD;--wp--preset--color--yellow: #FDE64B;--wp--preset--color--orange: #ED7014;--wp--preset--color--red: #D0312D;--wp--preset--color--pink: #b565a7;--wp--preset--color--purple: #A32CC4;--wp--preset--color--blue: #3A43BA;--wp--preset--color--green: #3BB143;--wp--preset--color--brown: #231709;--wp--preset--color--grey: #6C626D;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 12px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--font-size--regular: 16px;--wp--preset--font-size--larger: 36px;--wp--preset--font-size--huge: 48px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
 /*# sourceURL=global-styles-inline-css */
 </style>
 
@@ -208,8 +270,52 @@ body.custom-background { background-color: #0a0a0a; }
 
 .site-info {
     display: none !important;
+}
+
+.wp-block-button__link {
+	white-space: nowrap !important;
+  text-align: center !important;
+  justify-content: center !important;
+  display: flex !important;
+  align-items: center !important;
+  background-color: #ff0000 !important; 
+  color: #ffffff !important;
+}
+
+.grecaptcha-badge {
+	visibility:hidden;
+}
+
+.wp-block-accordion-heading__toggle:hover {
+    color: #FFFFFF;
+    background-color: #00000000;
+}
+
+.wp-block-accordion-heading__toggle:focus {
+    border-color: transparent !important;
+    color: inherit !important;
+    background-color: transparent !important;
+}
+
+
+p a {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+a:focus {
+    outline: none;
 }		</style>
-		</head>
+		<link rel="stylesheet" id="cb-slider-style-css" href="/wp-content/plugins/carousel-block/blocks/vendor/swiper/swiper-bundle.min.css?ver=2.0.6" type="text/css" media="all">
+<style id="core-block-supports-inline-css" type="text/css">
+.wp-container-core-columns-is-layout-9d6595d7{flex-wrap:nowrap;}
+/*# sourceURL=core-block-supports-inline-css */
+</style>
+
+</head>
 
 <body class="wp-singular page-template-default page page-id-37 custom-background wp-custom-logo wp-theme-creativ-musician no-sidebar full-width">
 
@@ -256,39 +362,689 @@ body.custom-background { background-color: #0a0a0a; }
 <article id="post-37" class="post-37 page type-page status-publish hentry">
 	<div class="entry-content">
 		
-<figure class="wp-block-embed aligncenter is-type-rich is-provider-spotify wp-block-embed-spotify wp-embed-aspect-21-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-<iframe title="Spotify Embed: Fake Love" style="border-radius: 12px" width="100%" height="352" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" src="https://open.spotify.com/embed/album/6mJIBLjVDMZvZdAxR4cGxD?utm_source=oembed"></iframe>
+<div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:25%" id="music-menu">
+<div data-wp-context="{ &quot;autoclose&quot;: false, &quot;accordionItems&quot;: [] }" data-wp-interactive="core/accordion" role="group" class="wp-block-accordion is-layout-flow wp-block-accordion-is-layout-flow">
+<div data-wp-class--is-open="state.isOpen" data-wp-context="{ &quot;id&quot;: &quot;accordion-item-4&quot;, &quot;openByDefault&quot;: false }" data-wp-init="callbacks.initAccordionItems" data-wp-on-window--hashchange="callbacks.hashChange" class="wp-block-accordion-item is-layout-flow wp-block-accordion-item-is-layout-flow">
+<h3 class="wp-block-accordion-heading"><button aria-expanded="false" aria-controls="accordion-item-4-panel" data-wp-bind--aria-expanded="state.isOpen" data-wp-on--click="actions.toggle" data-wp-on--keydown="actions.handleKeyDown" id="accordion-item-4" type="button" class="wp-block-accordion-heading__toggle"><span class="wp-block-accordion-heading__toggle-title">Discography</span><span class="wp-block-accordion-heading__toggle-icon" aria-hidden="true">+</span></button></h3>
+
+
+
+<div inert aria-labelledby="accordion-item-4" data-wp-bind--inert="!state.isOpen" id="accordion-item-4-panel" role="region" class="wp-block-accordion-panel is-layout-flow wp-block-accordion-panel-is-layout-flow">
+<div data-wp-context="{ &quot;autoclose&quot;: false, &quot;accordionItems&quot;: [] }" data-wp-interactive="core/accordion" role="group" class="wp-block-accordion is-layout-flow wp-block-accordion-is-layout-flow">
+<div data-wp-class--is-open="state.isOpen" data-wp-context="{ &quot;id&quot;: &quot;accordion-item-1&quot;, &quot;openByDefault&quot;: false }" data-wp-init="callbacks.initAccordionItems" data-wp-on-window--hashchange="callbacks.hashChange" class="wp-block-accordion-item is-layout-flow wp-block-accordion-item-is-layout-flow">
+<h3 class="wp-block-accordion-heading"><button aria-expanded="false" aria-controls="accordion-item-1-panel" data-wp-bind--aria-expanded="state.isOpen" data-wp-on--click="actions.toggle" data-wp-on--keydown="actions.handleKeyDown" id="accordion-item-1" type="button" class="wp-block-accordion-heading__toggle"><span class="wp-block-accordion-heading__toggle-title">Singles</span><span class="wp-block-accordion-heading__toggle-icon" aria-hidden="true">+</span></button></h3>
+
+
+
+<div inert aria-labelledby="accordion-item-1" data-wp-bind--inert="!state.isOpen" id="accordion-item-1-panel" role="region" class="wp-block-accordion-panel is-layout-flow wp-block-accordion-panel-is-layout-flow">
+<p><a href="#" onclick="goToSlide(5);">Dirty Sprite</a></p>
+
+
+
+<p><a href="#" onclick="goToSlide(6);">Fake Love</a></p>
+</div>
+</div>
+
+
+
+<div data-wp-class--is-open="state.isOpen" data-wp-context="{ &quot;id&quot;: &quot;accordion-item-3&quot;, &quot;openByDefault&quot;: false }" data-wp-init="callbacks.initAccordionItems" data-wp-on-window--hashchange="callbacks.hashChange" class="wp-block-accordion-item is-layout-flow wp-block-accordion-item-is-layout-flow">
+<h3 class="wp-block-accordion-heading"><button aria-expanded="false" aria-controls="accordion-item-3-panel" data-wp-bind--aria-expanded="state.isOpen" data-wp-on--click="actions.toggle" data-wp-on--keydown="actions.handleKeyDown" id="accordion-item-3" type="button" class="wp-block-accordion-heading__toggle"><span class="wp-block-accordion-heading__toggle-title">Albums/EPs</span><span class="wp-block-accordion-heading__toggle-icon" aria-hidden="true">+</span></button></h3>
+
+
+
+<div inert aria-labelledby="accordion-item-3" data-wp-bind--inert="!state.isOpen" id="accordion-item-3-panel" role="region" class="wp-block-accordion-panel is-layout-flow wp-block-accordion-panel-is-layout-flow">
+<div data-wp-context="{ &quot;autoclose&quot;: false, &quot;accordionItems&quot;: [] }" data-wp-interactive="core/accordion" role="group" class="wp-block-accordion is-layout-flow wp-block-accordion-is-layout-flow">
+<div data-wp-class--is-open="state.isOpen" data-wp-context="{ &quot;id&quot;: &quot;accordion-item-2&quot;, &quot;openByDefault&quot;: false }" data-wp-init="callbacks.initAccordionItems" data-wp-on-window--hashchange="callbacks.hashChange" class="wp-block-accordion-item is-layout-flow wp-block-accordion-item-is-layout-flow">
+<h3 class="wp-block-accordion-heading"><button aria-expanded="false" aria-controls="accordion-item-2-panel" data-wp-bind--aria-expanded="state.isOpen" data-wp-on--click="actions.toggle" data-wp-on--keydown="actions.handleKeyDown" id="accordion-item-2" type="button" class="wp-block-accordion-heading__toggle"><span class="wp-block-accordion-heading__toggle-title">Off The Rip</span><span class="wp-block-accordion-heading__toggle-icon" aria-hidden="true">+</span></button></h3>
+
+
+
+<div inert aria-labelledby="accordion-item-2" data-wp-bind--inert="!state.isOpen" id="accordion-item-2-panel" role="region" class="wp-block-accordion-panel is-layout-flow wp-block-accordion-panel-is-layout-flow">
+<p><a href="#" onclick="goToSlide(0);">Fit Check</a></p>
+
+
+
+<p><a href="#" onclick="goToSlide(1);">RUNNAWAY FREESTYLE</a></p>
+
+
+
+<p><a href="#" onclick="goToSlide(2);">Wanna Go Home</a></p>
+
+
+
+<p><a href="#" onclick="goToSlide(3);">SOBER</a></p>
+
+
+
+<p><a href="#" onclick="goToSlide(4);">Chainz Bigger</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:75%">
+<div class="wp-block-cb-carousel-v2 cb-carousel-block cb-single-slide cb-rtl" data-cb-slides-per-view="1" data-cb-slides-per-group="1" data-cb-space-between="5" data-cb-speed="300" dir="rtl" data-cb-breakpoints="{&quot;768&quot;:{&quot;slidesPerView&quot;:1,&quot;slidesPerGroup&quot;:1}}"><div class="swiper"><div class="cb-wrapper swiper-wrapper">
+<div class="wp-block-cb-slide-v2 cb-slide swiper-slide">
+<p class="has-text-align-center has-huge-font-size">Fit Check</p>
+
+
+
+<div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Fit Check" width="640" height="360" src="https://www.youtube.com/embed/Tyyzu1STuAU?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></figure>
+</div>
 
 
 
-<figure class="wp-block-embed aligncenter is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
-<iframe title="Fake Love by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F2261014523&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe title="Fit Check by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371564286&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
 </div></figure>
+</div>
+</div>
+
+
+
+<p class="has-text-align-center has-huge-font-size">Lyrics</p>
+
+
+
+<p class="has-text-align-center">Ay like</p>
+
+
+
+<p class="has-text-align-center">Can I get a fit check</p>
+
+
+
+<p class="has-text-align-center">Hahaha</p>
+
+
+
+<p class="has-text-align-center">Esskeetit</p>
+
+
+
+<p class="has-text-align-center">Like can I get a – fit check, fit check<br>You know dat all my – drip wet, drip wet<br>You know it cost a – big check, big check<br>Half o’ my pinky – lil flex, lil flex<br>4 pinkies chain off – my neck, my neck<br>And it’s 4 chainz on – my neck, my neck<br>Iced out smart watch ain’t no – Patek, Patek<br>Try rob me n’ glock – gon stretch, gon stretch<br>Yeah</p>
+
+
+
+<p class="has-text-align-center">Yeah I got dis Balmain<br>all on my body<br>On my hoodie and I<br>got it all on my jeans<br>Type’o hoodie Juice wore<br>back in 2019<br>And it’s sequins be matchin’<br>the jeans silvery<br>Silver Louis V shoes,<br>hat n’ belt all on me<br>Rock dat shit with my ice<br>an’ I be looking so clean<br>An’ I iced out da glock<br>an’ iced out it’s beam<br>Niggas ran up Saturday n’<br>it left dem in last week<br>Ooh<br>and you know what I’m on<br>Zip o’ weed 4 o’ lean<br>damn that shit fucking strong<br>And I popped a couple beans<br>dammit can’t even walk<br>Come to think about it<br>how da fuck can I even talk<br>Feel like I’m on Saturn shit<br>Why’d I sip so much wok<br>But also feel like I’m the shit<br>so I don’t give a fuck<br>I Sip more lean I get more lit<br>I pour up another cup</p>
+
+
+
+<p class="has-text-align-center">Like</p>
+
+
+
+<p class="has-text-align-center">Like</p>
+
+
+
+<p class="has-text-align-center">Like</p>
+
+
+
+<p class="has-text-align-center">Like can I get a – fit check, fit check<br>You know dat all my – drip wet, drip wet<br>You know it cost a – big check, big check<br>Half o’ my pinky – lil flex, lil flex<br>4 pinkies chain off – my neck, my neck<br>And it’s 4 chainz on – my neck my neck<br>Iced out smart watch ain’t no – Patek Patek<br>Try rob me n’ glock – gon stretch, gon stretch<br>Yeah</p>
+</div>
+
+
+
+<div class="wp-block-cb-slide-v2 cb-slide swiper-slide">
+<p class="has-text-align-center has-huge-font-size">RUNNAWAY FREESTYLE</p>
+
+
+
+<div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="RUNNAWAY FREESTYLE" width="640" height="360" src="https://www.youtube.com/embed/JUMYL73vI3c?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div></figure>
+</div>
+
+
+
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="RUNNAWAY FREESTYLE by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371565393&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+</div></figure>
+</div>
+</div>
+
+
+
+<p class="has-text-align-center has-huge-font-size">Lyrics</p>
+
+
+
+<p class="has-text-align-center">I had to runaway to California<br>Cause you know I’m tryna cut corners<br>Yeah<br>I’m tryna cut corners<br>Yeah</p>
+
+
+
+<p class="has-text-align-center">Ooh Oh Oh</p>
+
+
+
+<p class="has-text-align-center">You know I had to runaway<br>Straight to da golden state<br>Ottawa just way to grey<br>Ain’t got no incentive to stay<br>Gotta move to the city<br>Of angels, talking LA<br>I wanna live among my kind hey<br>I wanna live among my kind hey</p>
+
+
+
+<p class="has-text-align-center">I’m fighting demons everyday<br>Cause dey da opposite of me<br>Makes us pretty much the same<br>We just different in degree<br>I got demons inside of me<br>But my demons is all enslaved<br>Makes me feel like Solomon hey<br>Makes me feel like Solomon hey</p>
+
+
+
+<p class="has-text-align-center">I pull out my grimoire ay<br>Learn more bout keepin’ nem at bay<br>Make ‘m do exactly as I say<br>Tell dem bitches manifest a Wraith<br>Bulletproof tints so I am safe<br>Like a Russian grip a K<br>Best defense a good offense hey<br>Best defense a good offense hey</p>
+
+
+
+<p class="has-text-align-center">I’m grateful every time I pray<br>And I don’t go on my knees to pray<br>Religion is useless anyway<br>I’m a dreamer yeah I imagine<br>I sip a potion that’s cliche<br>It wash all my sorrows away<br>Yeah I be pouring purple rain hey<br>Yeah I be pouring purple rain hey</p>
+
+
+
+<p class="has-text-align-center">It feels like just da other day<br>But it happened back 2020<br>Λlex died now I am Louis Λ<br>And I still miss him every day<br>I’m in my feels I be feelang<br>Dreadful I aint’t know what else to say<br>I Guess a lil bit like my hair hey<br>I Guess a lil bit like my hair hey</p>
+
+
+
+<p class="has-text-align-center">One of my idol’s once said, you can achieve anything, if not more, than what you see other people archiving, and thats facts, I took that statement to heart and aimed to pick up where he left off taking over the WRLD, if you don’t know who I’m talking about, here’s a hint, his name was Jarad, if you still don’t know who I’m talking about, until you do you a poser, and like honestly, just stop listening to my music, like, immediately, and don’t come back until you ain’t one</p>
+
+
+
+<p class="has-text-align-center">You know I had to runaway<br>Straight to da golden state<br>Ottawa just way to grey<br>Ain’t got no incentive to stay<br>Gotta move to the city<br>Of angels, talking LA<br>I wanna live among my kind hey<br>I wanna live among my kind hey</p>
+</div>
+
+
+
+<div class="wp-block-cb-slide-v2 cb-slide swiper-slide">
+<p class="has-text-align-center has-huge-font-size">Wanna Go Home</p>
+
+
+
+<div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Wanna Go Home" width="640" height="360" src="https://www.youtube.com/embed/GZBONe_Hnss?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div></figure>
+</div>
+
+
+
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Wanna Go Home by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371565927&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+</div></figure>
+</div>
+</div>
+
+
+
+<p></p>
+
+
+
+<p class="has-text-align-center has-huge-font-size">Lyrics</p>
+
+
+
+<p class="has-text-align-center">I wanna go home</p>
+
+
+
+<p class="has-text-align-center">They say home’s were the heart is<br>Guess my home’s in the darkness<br>You want me to explain it<br>Ion know where to start bitch</p>
+
+
+
+<p class="has-text-align-center">Guess I’ll tell you where it used to be</p>
+
+
+
+<p class="has-text-align-center">Yeah it always was inside the sea</p>
+
+
+
+<p class="has-text-align-center">Of darkness where it is sittin’ right now</p>
+
+
+
+<p class="has-text-align-center">Only sad cause it found a way out</p>
+
+
+
+<p class="has-text-align-center">You were my safe space<br>Yeah you were my home<br>Now my life’s a crawl space<br>A dark place I roam<br>Felt like I had finally<br>Found a place to call home<br>Then you go n you tell me<br>Dat we’re better off alone</p>
+
+
+
+<p class="has-text-align-center">Now my home’s back where it was before us<br>And a part of me wishes dat it stayed there<br>Never knew I could have that type connection<br>And now I do yeah, because we went there</p>
+
+
+
+<p class="has-text-align-center">Life’s not fair</p>
+
+
+
+<p class="has-text-align-center">Scream it in the air</p>
+
+
+
+<p class="has-text-align-center">I still love you</p>
+
+
+
+<p class="has-text-align-center">I still care</p>
+
+
+
+<p class="has-text-align-center">Said you still love me too</p>
+
+
+
+<p class="has-text-align-center">But can’t care, the way I do</p>
+
+
+
+<p class="has-text-align-center">So it’s bye dude</p>
+
+
+
+<p class="has-text-align-center">You were my safe space<br>Yeah you were my home<br>Now my life’s a crawl space<br>A dark place I roam<br>Felt like I had finally<br>Found a place to call home<br>Then you go n you tell me<br>Dat we’re better off alone</p>
+
+
+
+<p class="has-text-align-center">And I really do not think<br>I can ‘er replace you<br>For starters your split<br>Toung, percings, and tattoos<br>Move on to your mind<br>Your art’s like holy crap dude<br>Like da feeling I’d get<br>When blowing out your back ooh</p>
+
+
+
+<p class="has-text-align-center">And you love the drugs<br>And you know I love that too</p>
+
+
+
+<p class="has-text-align-center">Diamond in the rough<br>Lost you now I’m sad dude</p>
+
+
+
+<p class="has-text-align-center">You were my safe space<br>Yeah you were my home<br>Now my life’s a crawl space<br>A dark place I roam<br>Felt like I had finally<br>Found a place to call home<br>Then you go n you tell me<br>Dat we’re better off alone</p>
+
+
+
+<p class="has-text-align-center">I wanna go home</p>
+
+
+
+<p class="has-text-align-center">I’m already home</p>
+
+
+
+<p class="has-text-align-center">Kevin McCallister</p>
+
+
+
+<p class="has-text-align-center">Dark home alone</p>
+
+
+
+<p class="has-text-align-center">They say home’s were the heart is<br>Guess my home’s in the darkness<br>Gotta pick up my peices<br>Ion know where to start shit</p>
+
+
+
+<p class="has-text-align-center">Dark home alone</p>
+</div>
+
+
+
+<div class="wp-block-cb-slide-v2 cb-slide swiper-slide">
+<p class="has-text-align-center has-huge-font-size">SOBER</p>
+
+
+
+<div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="SOBER" width="640" height="360" src="https://www.youtube.com/embed/bQ0llmxWfdE?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div></figure>
+</div>
+
+
+
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="SOBER by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371567658&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+</div></figure>
+</div>
+</div>
+
+
+
+<p class="has-text-align-center has-huge-font-size">Lyrics</p>
+
+
+
+<p class="has-text-align-center">Misery loves company</p>
+
+
+
+<p class="has-text-align-center">I guess das why you always got company</p>
+
+
+
+<p class="has-text-align-center">Yeah, Unh</p>
+
+
+
+<p class="has-text-align-center">Yeah we’d say we’re insane<br>But I was joking wichu<br>Found out you weren’t playin’<br>And dat shit broke me into<br>A cou-ple mi-lli-ain<br>Peices don’t know what to do<br>Cause you still my number 1<br>Second-best not something I do</p>
+
+
+
+<p class="has-text-align-center">Yeah you know das true</p>
+
+
+
+<p class="has-text-align-center">Ion-lie das real shit too</p>
+
+
+
+<p class="has-text-align-center">And-I-mighta-kinda promised you</p>
+
+
+
+<p class="has-text-align-center">Dat das forever too</p>
+
+
+
+<p class="has-text-align-center">I fucking still love you</p>
+
+
+
+<p class="has-text-align-center">Ah FUCK</p>
+
+
+
+<p class="has-text-align-center">I still kinda wish we wasn’t over<br>Or dat I had some kind of closure<br>But I couldn’t let you hurt me any longer<br>I was love drunk now I’m sober</p>
+
+
+
+<p class="has-text-align-center">I gave you all of me<br>You gave me blue balls<br>Baby girl can’t you see<br>How you turn me on<br>Like so effortlessly<br>Passion builds like a storm<br>Then you fuck with my head<br>And not on my bod</p>
+
+
+
+<p class="has-text-align-center">Like what the fuck is that<br>Yeah that shit’s so fucking whack<br>Like the way you broke my heart<br>Felt like I had a heart attack<br>Like I thought you had my back<br>Then you went stabbed me in that<br>Did that shit with a clean smirk<br>Four letters P. T. S. D. yeah<br>Now I’m steady dressing black<br>Like this parade that I’m at<br>And I’m showing the world my scars right now</p>
+
+
+
+<p class="has-text-align-center">I still kinda wish we wasn’t over<br>Or dat I had some kind of closure<br>But I couldn’t let you hurt me any longer<br>I was love drunk now I’m sober</p>
+
+
+
+<p class="has-text-align-center">Why’d you<br>Try n play me<br>I say I love you<br>You say you hate me</p>
+
+
+
+<p class="has-text-align-center">Jokes on you you played yourself bitch<br>Your vibe was way to low and selfish<br>Won’t take over the world wimme<br>I’ll just do it by myself<br>On the highway to sucess<br>You took the exit for hell bitch</p>
+
+
+
+<p class="has-text-align-center">I still kinda wish we wasn’t over<br>Or dat I had some kind of closure<br>But I couldn’t let you hurt me any longer<br>I was love drunk now I’m sober</p>
+</div>
+
+
+
+<div class="wp-block-cb-slide-v2 cb-slide swiper-slide">
+<p class="has-text-align-center has-huge-font-size">Chainz Bigger</p>
+
+
+
+<div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Chainz Bigger" width="640" height="360" src="https://www.youtube.com/embed/i7S-1xCYi2E?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div></figure>
+</div>
+
+
+
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Chainz Bigger by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371568207&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+</div></figure>
+</div>
+</div>
+
+
+
+<p class="has-text-align-center has-huge-font-size">Lyrics</p>
+
+
+
+<p class="has-text-align-center">Rip Von, this hit’s for you.</p>
+
+
+
+<p class="has-text-align-center">Yo see deeze chainz, they bigga<br>But if a nigga try touch I’ll stretch a nigga</p>
+
+
+
+<p class="has-text-align-center">Ya dig</p>
+
+
+
+<p class="has-text-align-center">Don’t run up on me nigga<br>or them triggers gettin’ ta-ta-tapped<br>Oh yo chain’s big? my chain’s bigger<br>touch I’m sprayin’ like ra-ta-tat<br>Why you talking down on gang yo<br>that’s gon get your crew attacked<br>We wet your block, we wig splitters<br>brains hit your walk go spla-spla-splat</p>
+
+
+
+<p class="has-text-align-center">Streched him out – on his front walk –<br>yeah das where he at<br>When his mom – saw him like dat –<br>she got heart attack<br>Why’d ya talk – down on gang yo –<br>damn that shit was whack<br>Now you done – turned to an opp –<br>had to up the gat<br>Now you done – turned past tense –<br>where da fuck you at<br>6 feet deep – under da ground –<br>how fucked up is that<br>Less fucked up – than his face was –<br>I’ll attest to that<br>Holy shit – twelve on the way –<br>Skrrt back to da trap</p>
+
+
+
+<p class="has-text-align-center">Back at the trap<br>Fresh off a drill<br>Popped dat pussy nigga<br>after I popped a couple pills<br>Teeth Johnny Dang<br>40 for the grill<br>Dropped dat much yeah nigga<br>give a shit about couple bills</p>
+
+
+
+<p class="has-text-align-center">Ayyy</p>
+
+
+
+<p class="has-text-align-center">Yuh yuh yuh</p>
+
+
+
+<p class="has-text-align-center">Don’t run up on me nigga<br>or them triggers gettin’ ta-ta-tapped<br>Oh yo chain’s big? my chain’s bigger<br>touch I’m sprayin’ like ra-ta-tat<br>Why you talking down on gang yo<br>that’s gon get your crew attacked<br>We wet your block, we wig splitters<br>brains hit your walk go spla-spla-splat</p>
+
+
+
+<p class="has-text-align-center">Ayyyyy</p>
+
+
+
+<p class="has-text-align-center">Hahaha</p>
+
+
+
+<p class="has-text-align-center">Run up and I’m sprayin’ not playin’</p>
+
+
+
+<p class="has-text-align-center">Beam on a bitch and got good aim</p>
+
+
+
+<p class="has-text-align-center">Better duck and get to prayin’</p>
+
+
+
+<p class="has-text-align-center">Better hope you tight with God too, BITCH!</p>
+
+
+
+<p class="has-text-align-center">Ahaha jokes on you he don’t exist how you think he does, and the closest you ever gonna be to a god is me</p>
+
+
+
+<p class="has-text-align-center">Bitch</p>
+</div>
+
+
+
+<div class="wp-block-cb-slide-v2 cb-slide swiper-slide">
+<p class="has-text-align-center has-huge-font-size">Dirty Sprite</p>
 
 
 
 <figure class="wp-block-embed is-type-rich is-provider-spotify wp-block-embed-spotify wp-embed-aspect-21-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-<iframe title="Spotify Embed: Dirty Sprite" style="border-radius: 12px" width="100%" height="352" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" src="https://open.spotify.com/embed/album/6wnz8qtnJwjoRzJd794U1I?utm_source=oembed"></iframe>
+<iframe title="Spotify Embed: Dirty Sprite" style="border-radius: 12px" width="100%" height="152" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" src="https://open.spotify.com/embed/track/2wWPYCVCaQtkNU23Xu4viZ?utm_source=oembed"></iframe>
 </div></figure>
 
 
 
-<figure class="wp-block-embed aligncenter is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
-<iframe title="Dirty Sprite by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1470650428&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+<div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Dirty Sprite" width="640" height="480" src="https://www.youtube.com/embed/iX3jb3YIAcg?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div></figure>
+</div>
+
+
+
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Dirty Sprite by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1470650428&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+</div></figure>
+</div>
+</div>
+
+
+
+<p class="has-text-align-center has-huge-font-size">Lyrics</p>
+
+
+
+<p class="has-text-align-center">Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>.223s n clip hold like 30<br>Wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>.223s n clip hold like 30</p>
+
+
+
+<p class="has-text-align-center">.223s and the clip it hold like 30 yeah<br>Headshot for any nigga try n hurt me yeah<br>Off da lean in the whip now I’m swerving yeah<br>On da corner with a brick now I’m serving yeah<br>And I’m out here getting rich I be earning yeah<br>And I’m blowing bags on drip I be splurging yeah<br>And I’m smoking gas n shit always burning yeah<br>And I’m out here with dis bitch she too curvy yeah<br>You know that I fell in love with that bitty<br>I love when my face is all up in her titties<br>Luv when she ride me and she do the splitties<br>Her pussy so wet like it’s da Mississippi<br>U seen me pop out on the scene in my Ricky’s<br>And if you run up know that I got my blickey<br>I don’t catch attempts so you better not tempt me<br>Worst thing you could do is try be my enemy<br>Yeah</p>
+
+
+
+<p class="has-text-align-center">Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>.223s n clip hold like 30<br>Wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>.223s n clip hold like 30</p>
+</div>
+
+
+
+<div class="wp-block-cb-slide-v2 cb-slide swiper-slide">
+<p class="has-text-align-center has-huge-font-size">Fake Love</p>
+
+
+
+<figure class="wp-block-embed is-type-rich is-provider-spotify wp-block-embed-spotify wp-embed-aspect-21-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Spotify Embed: Fake Love" style="border-radius: 12px" width="100%" height="152" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" src="https://open.spotify.com/embed/track/7c5WkNw6xhzAKV2I04Xn55?utm_source=oembed"></iframe>
 </div></figure>
 
 
 
-<figure class="wp-block-embed aligncenter is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-<iframe title="Off The Rip" width="640" height="360" src="https://www.youtube.com/embed/videoseries?list=PLpM0i_xqHAQ4XNpXyCm65vbqiZQ8EHkZb" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Fake Love" width="640" height="480" src="https://www.youtube.com/embed/BQsOK3DrFW0?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></figure>
+</div>
 
 
 
-<figure class="wp-block-embed aligncenter is-type-rich is-provider-soundcloud wp-block-embed-soundcloud wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="Off The Rip by Louis Λ" width="640" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F1518810283&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+<div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Fake Love by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F2261014523&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
 </div></figure>
+</div>
+</div>
+
+
+
+<p class="has-text-align-center has-huge-font-size">Lyrics</p>
+
+
+
+<p class="has-text-align-center has-regular-font-size">Ex bitch left me had me losing my composure<br>Ain’t no way that I could ever see us being over<br>Next thing that you know we’re done and I don’t get no closure<br>Thought she was for real but she turned out to be a poser<br>I still remember all the times when she’d pull me closer<br>So blinded by fake love couldn’t see that chip all on her shoulder<br>She turned the fire that was my love into a fucking smolder<br>Now I’m running from my past like Indiana from that boulder yeah</p>
+
+
+
+<p class="has-text-align-center">Fake love is the worst ooh</p>
+
+
+
+<p class="has-text-align-center">Cause it only hurts you</p>
+
+
+
+<p class="has-text-align-center">And now im picking out my hearse too</p>
+
+
+
+<p class="has-text-align-center">Cause I feel dead inside</p>
+
+
+
+<p class="has-text-align-center">I don’t wanna be alive</p>
+
+
+
+<p class="has-text-align-center">I just wanna rewind time</p>
+
+
+
+<p class="has-text-align-center">I just wanna make you mine again yeah</p>
+
+
+
+<p class="has-text-align-center">Again yeah</p>
+
+
+
+<p class="has-text-align-center">I know I said it’s fake love but it felt real<br>The way you said I love you first girl that made me thrilled<br>The way you left me in the dust girl like what’s the deal<br>How will I ever get over this heartbreak I don’t know that I will</p>
+
+
+
+<p class="has-text-align-center">Ex bitch left me had me losing my composure<br>Ain’t no way that I could ever see us being over<br>Next thing that you know we’re done and I don’t get no closure<br>Thought she was for real but she turned out to be a poser<br>I still remember all the times when she’d pull me closer<br>So blinded by fake love couldn’t see that chip all on her shoulder<br>She turned the fire that was my love into a fucking smolder<br>Now I’m running from my past like Indiana from that boulder yeah</p>
+
+
+
+<p class="has-text-align-center">Now I’m running from my, past<br>And it seems like I can’t move, fast<br>Enough to get away from this, trash<br>Feeling just tryna break the, glass<br>Ceilings keeping me where im at<br>Reeling from getting stabbed in the back<br>Not literally but it felt like that<br>So literally I feel dead no cap</p>
+
+
+
+<p class="has-text-align-center">I don’t wanna feel this way</p>
+
+
+
+<p class="has-text-align-center">I just wanna feel okay</p>
+
+
+
+<p class="has-text-align-center">I just wanna feel something again yeah</p>
+
+
+
+<p class="has-text-align-center">Again yeah</p>
+
+
+
+<p class="has-text-align-center">I know I said it’s fake love but it felt real<br>The way you said I love you first girl that made me thrilled<br>The way you left me in the dust girl like what’s the deal<br>How will I ever get over this heartbreak I don’t know that I will</p>
+
+
+
+<p class="has-text-align-center">Ex bitch left me had me losing my composure<br>Ain’t no way that I could ever see us being over<br>Next thing that you know we’re done and I don’t get no closure<br>Thought she was for real but she turned out to be a poser<br>I still remember all the times when she’d pull me closer<br>So blinded by fake love couldn’t see that chip all on her shoulder<br>She turned the fire that was my love into a fucking smolder<br>Now I’m running from my past like Indiana from that boulder yeah</p>
+</div>
+</div></div></div>
+</div>
+</div>
 	</div><!-- .entry-content -->
 
 	</article><!-- #post-## -->
@@ -297,9 +1053,7 @@ body.custom-background { background-color: #0a0a0a; }
 	</div><!-- #primary -->
 
 	<aside id="secondary" class="widget-area" role="complementary">
-		<aside id="block-2" class="widget widget_block widget_search"><form role="search" method="get" action="/" class="wp-block-search__button-outside wp-block-search__text-button wp-block-search"><label class="wp-block-search__label" for="wp-block-search__input-1">Search</label><div class="wp-block-search__inside-wrapper"><input class="wp-block-search__input" id="wp-block-search__input-1" placeholder="" value="" type="search" name="s" required><button aria-label="Search" class="wp-block-search__button wp-element-button" type="submit">Search</button></div></form></aside><aside id="block-3" class="widget widget_block"><div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"><h2 class="wp-block-heading">Recent Posts</h2><ul class="wp-block-latest-posts__list wp-block-latest-posts"><li><a class="wp-block-latest-posts__post-title" href="/hello-world/">Hello world!</a></li>
-</ul></div></div></aside><aside id="block-4" class="widget widget_block"><div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"><h2 class="wp-block-heading">Recent Comments</h2><div class="no-comments wp-block-latest-comments">No comments to show.</div></div></div></aside><aside id="block-5" class="widget widget_block"><div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"><h2 class="wp-block-heading">Archives</h2><ul class="wp-block-archives-list wp-block-archives">	<li><a href="/2025/08/">August 2025</a></li>
-</ul></div></div></aside><aside id="block-6" class="widget widget_block">
+		<aside id="block-2" class="widget widget_block widget_search"><form role="search" method="get" action="/" class="wp-block-search__button-outside wp-block-search__text-button wp-block-search"><label class="wp-block-search__label" for="wp-block-search__input-5">Search</label><div class="wp-block-search__inside-wrapper"><input class="wp-block-search__input" id="wp-block-search__input-5" placeholder="" value="" type="search" name="s" required><button aria-label="Search" class="wp-block-search__button wp-element-button" type="submit">Search</button></div></form></aside><aside id="block-3" class="widget widget_block"><div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"><h2 class="wp-block-heading">Recent Posts</h2><ul class="wp-block-latest-posts__list wp-block-latest-posts"></ul></div></div></aside><aside id="block-4" class="widget widget_block"><div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"><h2 class="wp-block-heading">Recent Comments</h2><div class="no-comments wp-block-latest-comments">No comments to show.</div></div></div></aside><aside id="block-5" class="widget widget_block"><div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"><h2 class="wp-block-heading">Archives</h2><div class="wp-block-archives-list wp-block-archives">No archives to show.</div></div></div></aside><aside id="block-6" class="widget widget_block">
 <div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow"></div></div>
 </aside>	</aside><!-- #secondary -->
 </div>		</div>
@@ -312,11 +1066,21 @@ body.custom-background { background-color: #0a0a0a; }
     		</footer><div class="backtotop"><i class="fa fa-angle-up"></i></div><script type="speculationrules">
 {"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/creativ-musician/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
 </script>
+<script type="importmap" id="wp-importmap">
+{"imports":{"@wordpress/interactivity":"/wp-includes/js/dist/script-modules/interactivity/index.min.js?ver=66c613f68580994bb00a"}}
+</script>
+<script type="module" src="/wp-includes/js/dist/script-modules/block-library/accordion/view.min.js?ver=ea83272e31d6958353ff" id="@wordpress/block-library/accordion/view-js-module" fetchpriority="low" data-wp-router-options="{&quot;loadOnClientNavigation&quot;:true}"></script>
+<link rel="modulepreload" href="/wp-includes/js/dist/script-modules/interactivity/index.min.js?ver=66c613f68580994bb00a" id="@wordpress/interactivity-js-modulepreload" fetchpriority="low">
+<script type="application/json" id="wp-script-module-data-@wordpress/interactivity">
+{"state":{"core/accordion":{"isOpen":{}}},"derivedStateClosures":{"core/accordion":["state.isOpen"]}}
+</script>
 <script type="text/javascript" src="/wp-content/themes/creativ-musician/assets/js/slick.min.js?ver=2017417" id="jquery-slick-js"></script>
 <script type="text/javascript" src="/wp-content/themes/creativ-musician/assets/js/jquery.matchHeight.min.js?ver=2017417" id="jquery-match-height-js"></script>
 <script type="text/javascript" src="/wp-content/themes/creativ-musician/assets/js/navigation.min.js?ver=20151215" id="creativ-musician-navigation-js"></script>
 <script type="text/javascript" src="/wp-content/themes/creativ-musician/assets/js/skip-link-focus-fix.min.js?ver=20151215" id="creativ-musician-skip-link-focus-fix-js"></script>
 <script type="text/javascript" src="/wp-content/themes/creativ-musician/assets/js/custom.min.js?ver=20151215" id="creativ-musician-custom-js-js"></script>
+<script type="text/javascript" src="/wp-content/plugins/carousel-block/blocks/vendor/swiper/swiper-bundle.min.js?ver=2.0.6" id="cb-slider-script-js"></script>
+<script type="text/javascript" src="/wp-content/plugins/carousel-block/build/carousel/view.js?ver=3e7e1a6971c08b459ec2" id="cb-carousel-v2-view-script-js" defer="defer" data-wp-strategy="defer"></script>
 <script id="wp-emoji-settings" type="application/json">
 {"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"/wp-includes/js/wp-emoji-release.min.js?ver=6.9.1"}}
 </script>
