@@ -220,8 +220,41 @@ body.custom-background { background-color: #0a0a0a; }
 }
 
 .wp-block-button__link {
+	white-space: nowrap !important;
+  text-align: center !important;
+  justify-content: center !important;
+  display: flex !important;
+  align-items: center !important;
   background-color: #ff0000 !important; 
   color: #ffffff !important;
+}
+
+.grecaptcha-badge {
+	visibility:hidden;
+}
+
+.wp-block-accordion-heading__toggle:hover {
+    color: #FFFFFF;
+    background-color: #00000000;
+}
+
+.wp-block-accordion-heading__toggle:focus {
+    border-color: transparent !important;
+    color: inherit !important;
+    background-color: transparent !important;
+}
+
+
+p a {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+a:focus {
+    outline: none;
 }		</style>
 		<style id="core-block-supports-inline-css" type="text/css">
 .wp-container-core-columns-is-layout-9d6595d7{flex-wrap:nowrap;}
