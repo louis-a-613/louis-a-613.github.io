@@ -42,11 +42,11 @@
     
     requestAnimationFrame(() => {
       const anchor = activeSlide.querySelector(`#lyrics-end-${carousel.activeIndex}`);
-
+      
       const height = anchor 
         ? anchor.offsetTop + anchor.offsetHeight + 20 
         : activeSlide.scrollHeight;
-
+      
       carousel.el.style.height = `${height}px`;
       carousel.el.style.overflowY = 'hidden';
       
@@ -68,9 +68,38 @@
 
       if (window.carousel) {
         console.log('Swiper instance found!');
-        window.carousel.params.allowTouchMove = false;      
+        
+        window.carousel.allowTouchMove = false;
+        window.carousel.allowSlideNext = false;
+        window.carousel.allowSlidePrev = false;
+        
+        window.carousel.params.allowTouchMove = false;
+        window.carousel.params.simulateTouch = false;
+        window.carousel.params.touchRatio = 0;
+        window.carousel.params.touchAngle = 0;
+        window.carousel.params.shortSwipes = false;
+        window.carousel.params.longSwipes = false;
+        
+        const swiperContainer = window.carousel.el;
+        
+        ['touchstart', 'touchmove', 'touchend', 'mousedown', 'mousemove', 'mouseup'].forEach(eventType => {
+          swiperContainer.addEventListener(eventType, (e) => {
+            const target = e.target;
+            const isInteractive = target.tagName === 'IFRAME' || 
+                                 target.closest('iframe') ||
+                                 target.tagName === 'A' ||
+                                 target.closest('a');
+            
+            if (!isInteractive) {
+              e.stopImmediatePropagation();
+            }
+          }, true);
+        });
+        
+        window.carousel.update();
+        
         goToSlide(7);
-
+        
         setTimeout(() => {
           updateCarouselHeight(window.carousel);
         }, 100);
@@ -254,7 +283,6 @@ body.custom-background { background-color: #0a0a0a; }
     color: #FF0000 !important;
 }
 
-/* Shared button styles */
 .main-navigation ul.nav-menu > li:last-child > a {
     background-color: transparent !important;
     color: #FF0000 !important;
@@ -262,7 +290,6 @@ body.custom-background { background-color: #0a0a0a; }
     line-height: 1.5 !important;
 }
 
-/* Desktop: Larger, rounded if desired */
 @media (min-width: 1024px) {
 	.site-content {
         padding-top: 88.5px !important;
@@ -274,7 +301,6 @@ body.custom-background { background-color: #0a0a0a; }
     }
 }
 
-/* Tablet: Medium, flat for touch */
 @media (min-width: 481px) and (max-width: 1023px) {
 	.site-content {
         padding-top: 80px !important;
@@ -289,7 +315,6 @@ body.custom-background { background-color: #0a0a0a; }
     }
 }
 
-/* Mobile: Smaller, flat for touch */
 @media (max-width: 480px) {
 	.site-content {
         padding-top: 190px !important;
@@ -351,26 +376,14 @@ p a {
 a:hover {
     text-decoration: underline;
 }
+
 a:focus {
     outline: none;
 }
 
-.discography .swiper-wrapper,
-.discography .swiper-slide {
-    pointer-events: none;
-}
-
-.discography .swiper-slide iframe[src*="spotify.com"],
-.discography .swiper-slide iframe[src*="soundcloud.com"],
-.discography .swiper-slide iframe[src*="youtube.com"] {
-    pointer-events: auto;
-}
-
 .discography .wp-block-cb-carousel-v2 {
     overflow-y: hidden !important;
-}
-
-</style>
+}		</style>
 		<link rel="stylesheet" id="cb-slider-style-css" href="/wp-content/plugins/carousel-block/blocks/vendor/swiper/swiper-bundle.min.css?ver=2.0.6" type="text/css" media="all">
 <style id="core-block-supports-inline-css" type="text/css">
 .wp-container-core-columns-is-layout-9d6595d7{flex-wrap:nowrap;}
@@ -498,7 +511,7 @@ a:focus {
 
 
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:75%">
-<div class="wp-block-cb-carousel-v2 cb-carousel-block cb-single-slide cb-rtl discography" data-cb-slides-per-view="1" data-cb-slides-per-group="1" data-cb-space-between="5" dir="rtl" data-cb-breakpoints="{&quot;768&quot;:{&quot;slidesPerView&quot;:1,&quot;slidesPerGroup&quot;:1}}"><div class="swiper"><div class="cb-wrapper swiper-wrapper">
+<div class="wp-block-cb-carousel-v2 cb-carousel-block cb-single-slide discography" data-cb-slides-per-view="1" data-cb-slides-per-group="1" data-cb-space-between="5" data-cb-breakpoints="{&quot;768&quot;:{&quot;slidesPerView&quot;:1,&quot;slidesPerGroup&quot;:1}}"><div class="swiper"><div class="cb-wrapper swiper-wrapper">
 <div class="wp-block-cb-slide-v2 cb-slide swiper-slide">
 <p class="has-text-align-center has-huge-font-size">Fit Check</p>
 
@@ -506,16 +519,16 @@ a:focus {
 
 <div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-<iframe title="Fit Check" width="640" height="360" src="https://www.youtube.com/embed/Tyyzu1STuAU?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe title="Fit Check by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371564286&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
 </div></figure>
 </div>
 
 
 
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
-<iframe title="Fit Check by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371564286&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Fit Check" width="640" height="360" src="https://www.youtube.com/embed/Tyyzu1STuAU?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></figure>
 </div>
 </div>
@@ -546,7 +559,7 @@ a:focus {
 
 
 
-<p class="has-text-align-center">Yeah I got dis Balmain<br>all on my body<br>On my hoodie and I<br>got it all on my jeans<br>Type’o hoodie Juice wore<br>back in 2019<br>’And it’s sequins be matchin<br>the jeans silvery<br>,Silver Louis V shoes<br>hat n’ belt all on me<br>Rock dat shit with my ice<br>an’ I be looking so clean<br>An’ I iced out da glock<br>an’ iced out it’s beam<br>’Niggas ran up Saturday n<br>it left dem in last week<br>Ooh<br>and you know what I’m on<br>Zip o’ weed 4 o’ lean<br>damn that shit fucking strong<br>And I popped a couple beans<br>dammit can’t even walk<br>Come to think about it<br>how da fuck can I even talk<br>Feel like I’m on Saturn shit<br>Why’d I sip so much wok<br>But also feel like I’m the shit<br>so I don’t give a fuck<br>I Sip more lean I get more lit<br>I pour up another cup</p>
+<p class="has-text-align-center">Yeah I got dis Balmain<br>all on my body<br>On my hoodie and I<br>got it all on my jeans<br>Type’o hoodie Juice wore<br>back in 2019<br>And it’s sequins be matchin’<br>the jeans silvery<br>Silver Louis V shoes,<br>hat n’ belt all on me<br>Rock dat shit with my ice<br>an’ I be looking so clean<br>An’ I iced out da glock<br>an’ iced out it’s beam<br>Niggas ran up Saturday n’<br>it left dem in last week<br>Ooh<br>and you know what I’m on<br>Zip o’ weed 4 o’ lean<br>damn that shit fucking strong<br>And I popped a couple beans<br>dammit can’t even walk<br>Come to think about it<br>how da fuck can I even talk<br>Feel like I’m on Saturn shit<br>Why’d I sip so much wok<br>But also feel like I’m the shit<br>so I don’t give a fuck<br>I Sip more lean I get more lit<br>I pour up another cup</p>
 
 
 
@@ -563,6 +576,9 @@ a:focus {
 
 
 <p class="has-text-align-center">Like can I get a – fit check, fit check<br>You know dat all my – drip wet, drip wet<br>You know it cost a – big check, big check<br>Half o’ my pinky – lil flex, lil flex<br>Four pinkies chain off – my neck, my neck<br>And it’s four chainz on – my neck, my neck<br>Iced out smart watch ain’t no – Patek Patek<br>Try rob me n’ glock – gon stretch, gon stretch<br>Yeah</p>
+
+
+
 <div id="lyrics-end-0"></div>
 </div>
 
@@ -575,16 +591,16 @@ a:focus {
 
 <div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-<iframe title="RUNNAWAY FREESTYLE" width="640" height="360" src="https://www.youtube.com/embed/JUMYL73vI3c?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe title="RUNNAWAY FREESTYLE by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371565393&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
 </div></figure>
 </div>
 
 
 
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="RUNNAWAY FREESTYLE by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371565393&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="RUNNAWAY FREESTYLE" width="640" height="360" src="https://www.youtube.com/embed/JUMYL73vI3c?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></figure>
 </div>
 </div>
@@ -628,6 +644,9 @@ a:focus {
 
 
 <p class="has-text-align-center">You know I had to runaway<br>Straight to da golden state<br>Ottawa just way to grey<br>Ain’t got no incentive to stay<br>Gotta move to the city<br>Of angels, talking LA<br>I wanna live among my kind hey<br>I wanna live among my kind hey</p>
+
+
+
 <div id="lyrics-end-1"></div>
 </div>
 
@@ -640,16 +659,16 @@ a:focus {
 
 <div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="Wanna Go Home" width="640" height="360" src="https://www.youtube.com/embed/GZBONe_Hnss?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Wanna Go Home by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371565927&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
 </div></figure>
 </div>
 
 
 
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="Wanna Go Home by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371565927&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Wanna Go Home" width="640" height="360" src="https://www.youtube.com/embed/GZBONe_Hnss?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></figure>
 </div>
 </div>
@@ -765,6 +784,9 @@ a:focus {
 
 
 <p class="has-text-align-center">Dark home alone</p>
+
+
+
 <div id="lyrics-end-2"></div>
 </div>
 
@@ -777,16 +799,16 @@ a:focus {
 
 <div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="SOBER" width="640" height="360" src="https://www.youtube.com/embed/bQ0llmxWfdE?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="SOBER by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371567658&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
 </div></figure>
 </div>
 
 
 
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="SOBER by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371567658&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="SOBER" width="640" height="360" src="https://www.youtube.com/embed/bQ0llmxWfdE?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></figure>
 </div>
 </div>
@@ -809,7 +831,7 @@ a:focus {
 
 
 
-<p class="has-text-align-center">Yeah we’d say we’re insane<br>But I was joking wichu<br>’Found out you weren’t playin<br>And dat shit broke me into<br>A cou-ple mi-lli-ain<br>Peices don’t know what to do<br>Cause you still my number 1<br>Second-best not something I do</p>
+<p class="has-text-align-center">Yeah we’d say we’re insane<br>But I was joking wichu<br>Found out you weren’t playin’<br>And dat shit broke me into<br>A cou-ple mi-lli-ain<br>Peices don’t know what to do<br>Cause you still my number 1<br>Second-best not something I do</p>
 
 
 
@@ -862,6 +884,9 @@ a:focus {
 
 
 <p class="has-text-align-center">I still kinda wish we wasn’t over<br>Or dat I had some kind of closure<br>But I couldn’t let you hurt me any longer<br>I was love drunk now I’m sober</p>
+
+
+
 <div id="lyrics-end-3"></div>
 </div>
 
@@ -874,16 +899,16 @@ a:focus {
 
 <div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="Chainz Bigger" width="640" height="360" src="https://www.youtube.com/embed/i7S-1xCYi2E?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Chainz Bigger by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371568207&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
 </div></figure>
 </div>
 
 
 
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="Chainz Bigger by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1371568207&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Chainz Bigger" width="640" height="360" src="https://www.youtube.com/embed/i7S-1xCYi2E?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></figure>
 </div>
 </div>
@@ -894,7 +919,7 @@ a:focus {
 
 
 
-<p class="has-text-align-center">.Rip Von, this hit’s for you</p>
+<p class="has-text-align-center">Rip Von, this hit’s for you.</p>
 
 
 
@@ -910,7 +935,7 @@ a:focus {
 
 
 
-<p class="has-text-align-center">– Streched him out – on his front walk<br>yeah das where he at<br>– When his mom – saw him like dat<br>she got heart attack<br>– Why’d ya talk – down on gang yo<br>damn that shit was whack<br>– Now you done – turned to an opp<br>had to up the gat<br>– Now you done – turned past tense<br>where da fuck you at<br>– Six feet deep – under da ground<br>how fucked up is that<br>– Less fucked up – than his face was<br>I’ll attest to that<br>– Holy shit – twelve on the way<br>Skrrt back to da trap</p>
+<p class="has-text-align-center">Streched him out – on his front walk –<br>yeah das where he at<br>When his mom – saw him like dat –<br>she got heart attack<br>Why’d ya talk – down on gang yo –<br>damn that shit was whack<br>Now you done – turned to an opp –<br>had to up the gat<br>Now you done – turned past tense –<br>where da fuck you at<br>Six feet deep – under da ground –<br>how fucked up is that<br>Less fucked up – than his face was –<br>I’ll attest to that<br>Holy shit – twelve on the way –<br>Skrrt back to da trap</p>
 
 
 
@@ -938,7 +963,7 @@ a:focus {
 
 
 
-<p class="has-text-align-center">’Run up and I’m sprayin’ not playin</p>
+<p class="has-text-align-center">Run up and I’m sprayin’ not playin’</p>
 
 
 
@@ -946,11 +971,11 @@ a:focus {
 
 
 
-<p class="has-text-align-center">’Better duck and get to prayin</p>
+<p class="has-text-align-center">Better duck and get to prayin’</p>
 
 
 
-<p class="has-text-align-center">!Better hope you tight with God too, BITCH</p>
+<p class="has-text-align-center">Better hope you tight with God too, BITCH!</p>
 
 
 
@@ -959,6 +984,9 @@ a:focus {
 
 
 <p class="has-text-align-center">Bitch</p>
+
+
+
 <div id="lyrics-end-4"></div>
 </div>
 
@@ -977,16 +1005,16 @@ a:focus {
 
 <div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="Dirty Sprite" width="640" height="480" src="https://www.youtube.com/embed/iX3jb3YIAcg?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Dirty Sprite by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1470650428&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
 </div></figure>
 </div>
 
 
 
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="Dirty Sprite by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1470650428&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Dirty Sprite" width="640" height="480" src="https://www.youtube.com/embed/iX3jb3YIAcg?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></figure>
 </div>
 </div>
@@ -997,15 +1025,18 @@ a:focus {
 
 
 
-<p class="has-text-align-center">Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>223s n clip hold like 30.<br>Wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>223s n clip hold like 30.</p>
+<p class="has-text-align-center">Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>.223s n clip hold like 30<br>Wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>.223s n clip hold like 30</p>
 
 
 
-<p class="has-text-align-center">223s and the clip it hold like 30 yeah.<br>Headshot for any nigga try n hurt me yeah<br>Off da lean in the whip now I’m swerving yeah<br>On da corner with a brick now I’m serving yeah<br>And I’m out here getting rich I be earning yeah<br>And I’m blowing bags on drip I be splurging yeah<br>And I’m smoking gas n shit always burning yeah<br>And I’m out here with dis bitch she too curvy yeah<br>You know that I fell in love with that bitty<br>I love when my face is all up in her titties<br>Luv when she ride me and she do the splitties<br>Her pussy so wet like it’s da Mississippi<br>U seen me pop out on the scene in my Ricky’s<br>And if you run up know that I got my blickey<br>I don’t catch attempts so you better not tempt me<br>Worst thing you could do is try be my enemy<br>Yeah</p>
+<p class="has-text-align-center">.223s and the clip it hold like 30 yeah<br>Headshot for any nigga try n hurt me yeah<br>Off da lean in the whip now I’m swerving yeah<br>On da corner with a brick now I’m serving yeah<br>And I’m out here getting rich I be earning yeah<br>And I’m blowing bags on drip I be splurging yeah<br>And I’m smoking gas n shit always burning yeah<br>And I’m out here with dis bitch she too curvy yeah<br>You know that I fell in love with that bitty<br>I love when my face is all up in her titties<br>Luv when she ride me and she do the splitties<br>Her pussy so wet like it’s da Mississippi<br>U seen me pop out on the scene in my Ricky’s<br>And if you run up know that I got my blickey<br>I don’t catch attempts so you better not tempt me<br>Worst thing you could do is try be my enemy<br>Yeah</p>
 
 
 
-<p class="has-text-align-center">Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>223s n clip hold like 30.<br>Wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>223s n clip hold like 30.</p>
+<p class="has-text-align-center">Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>.223s n clip hold like 30<br>Wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>.223s n clip hold like 30</p>
+
+
+
 <div id="lyrics-end-5"></div>
 </div>
 
@@ -1024,16 +1055,16 @@ a:focus {
 
 <div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="Fake Love" width="640" height="480" src="https://www.youtube.com/embed/BQsOK3DrFW0?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Fake Love by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F2261014523&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
 </div></figure>
 </div>
 
 
 
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="Fake Love by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F2261014523&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Fake Love" width="640" height="480" src="https://www.youtube.com/embed/BQsOK3DrFW0?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></figure>
 </div>
 </div>
@@ -1113,6 +1144,9 @@ a:focus {
 
 
 <p class="has-text-align-center">Ex bitch left me had me losing my composure<br>Ain’t no way that I could ever see us being over<br>Next thing that you know we’re done and I don’t get no closure<br>Thought she was for real but she turned out to be a poser<br>I still remember all the times when she’d pull me closer<br>So blinded by fake love couldn’t see that chip all on her shoulder<br>She turned the fire that was my love into a fucking smolder<br>And now I’m running from my past like Indiana from that boulder yeah</p>
+
+
+
 <div id="lyrics-end-6"></div>
 </div>
 
@@ -1131,16 +1165,16 @@ a:focus {
 
 <div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="XOXO" width="640" height="480" src="https://www.youtube.com/embed/RAPMV3SIh1s?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="XOXO by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F2265010412&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
 </div></figure>
 </div>
 
 
 
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow">
-<figure class="wp-block-embed is-type-rich is-provider-soundcloud wp-block-embed-soundcloud"><div class="wp-block-embed__wrapper">
-<iframe loading="lazy" title="XOXO by Louis Λ" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F2265010412&amp;show_artwork=true&amp;maxheight=960&amp;maxwidth=640"></iframe>
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="XOXO" width="640" height="480" src="https://www.youtube.com/embed/RAPMV3SIh1s?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></figure>
 </div>
 </div>
@@ -1184,6 +1218,9 @@ a:focus {
 
 
 <p class="has-text-align-center">It’s you I miss</p>
+
+
+
 <div id="lyrics-end-7"></div>
 </div>
 </div></div></div>
