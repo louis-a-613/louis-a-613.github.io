@@ -313,7 +313,15 @@ a:focus {
 .discography .swiper-wrapper,
 .discography .swiper-slide {
     pointer-events: none;
-}		</style>
+}
+
+.discography .swiper-slide iframe[src*="spotify.com"],
+.discography .swiper-slide iframe[src*="soundcloud.com"],
+.discography .swiper-slide iframe[src*="youtube.com"] {
+    pointer-events: auto;
+}
+
+</style>
 		<link rel="stylesheet" id="cb-slider-style-css" href="/wp-content/plugins/carousel-block/blocks/vendor/swiper/swiper-bundle.min.css?ver=2.0.6" type="text/css" media="all">
 <style id="core-block-supports-inline-css" type="text/css">
 .wp-container-core-columns-is-layout-9d6595d7{flex-wrap:nowrap;}
