@@ -34,17 +34,27 @@
     }
   }
 
-  function limitScrollToAnchor(carousel) {
-    if (carousel) {
-      const activeSlide = carousel.slides[carousel.activeIndex];
-      const anchor = activeSlide.querySelector('#lyrics-end');
-      if (anchor) {
-        const anchorTop = anchor.offsetTop;
-        const container = carousel.el;
-        container.style.height = `${anchorTop + anchor.offsetHeight}px`;
-        container.style.overflowY = 'hidden';
+  function updateCarouselHeight(carousel) {
+    if (!carousel) return;
+    
+    const activeSlide = carousel.slides[carousel.activeIndex];
+    if (!activeSlide) return;
+    
+    requestAnimationFrame(() => {
+      const anchor = activeSlide.querySelector(`#lyrics-end-${carousel.activeIndex}`);
+
+      const height = anchor 
+        ? anchor.offsetTop + anchor.offsetHeight + 20 
+        : activeSlide.scrollHeight;
+
+      carousel.el.style.height = `${height}px`;
+      carousel.el.style.overflowY = 'hidden';
+      
+      carousel.update();
+      if (carousel.updateAutoHeight) {
+        carousel.updateAutoHeight();
       }
-    }
+    });
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -58,14 +68,27 @@
 
       if (window.carousel) {
         console.log('Swiper instance found!');
+        window.carousel.params.allowTouchMove = false;      
         goToSlide(7);
-        window.carousel.params.allowTouchMove = false;
-        window.carousel.update();
 
-        limitScrollToAnchor(window.carousel);
+        setTimeout(() => {
+          updateCarouselHeight(window.carousel);
+        }, 100);
 
+        window.carousel.on('slideChange', () => {
+          updateCarouselHeight(window.carousel);
+        });
+        
         window.carousel.on('slideChangeTransitionEnd', () => {
-          limitScrollToAnchor(window.carousel);
+          updateCarouselHeight(window.carousel);
+        });
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            updateCarouselHeight(window.carousel);
+          }, 150);
         });
 
         clearInterval(pollForSwiper);
@@ -540,7 +563,7 @@ a:focus {
 
 
 <p class="has-text-align-center">Like can I get a – fit check, fit check<br>You know dat all my – drip wet, drip wet<br>You know it cost a – big check, big check<br>Half o’ my pinky – lil flex, lil flex<br>Four pinkies chain off – my neck, my neck<br>And it’s four chainz on – my neck, my neck<br>Iced out smart watch ain’t no – Patek Patek<br>Try rob me n’ glock – gon stretch, gon stretch<br>Yeah</p>
-<div id="lyrics-end"></div>
+<div id="lyrics-end-0"></div>
 </div>
 
 
@@ -605,7 +628,7 @@ a:focus {
 
 
 <p class="has-text-align-center">You know I had to runaway<br>Straight to da golden state<br>Ottawa just way to grey<br>Ain’t got no incentive to stay<br>Gotta move to the city<br>Of angels, talking LA<br>I wanna live among my kind hey<br>I wanna live among my kind hey</p>
-<div id="lyrics-end"></div>
+<div id="lyrics-end-1"></div>
 </div>
 
 
@@ -742,7 +765,7 @@ a:focus {
 
 
 <p class="has-text-align-center">Dark home alone</p>
-<div id="lyrics-end"></div>
+<div id="lyrics-end-2"></div>
 </div>
 
 
@@ -839,7 +862,7 @@ a:focus {
 
 
 <p class="has-text-align-center">I still kinda wish we wasn’t over<br>Or dat I had some kind of closure<br>But I couldn’t let you hurt me any longer<br>I was love drunk now I’m sober</p>
-<div id="lyrics-end"></div>
+<div id="lyrics-end-3"></div>
 </div>
 
 
@@ -936,7 +959,7 @@ a:focus {
 
 
 <p class="has-text-align-center">Bitch</p>
-<div id="lyrics-end"></div>
+<div id="lyrics-end-4"></div>
 </div>
 
 
@@ -983,7 +1006,7 @@ a:focus {
 
 
 <p class="has-text-align-center">Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Mmmm<br>Pour the wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>223s n clip hold like 30.<br>Wock in the sprite now it’s dirty<br>Your bitch on my line actin’ flirty<br>And you better not try n hurt me<br>223s n clip hold like 30.</p>
-<div id="lyrics-end"></div>
+<div id="lyrics-end-5"></div>
 </div>
 
 
@@ -1090,7 +1113,7 @@ a:focus {
 
 
 <p class="has-text-align-center">Ex bitch left me had me losing my composure<br>Ain’t no way that I could ever see us being over<br>Next thing that you know we’re done and I don’t get no closure<br>Thought she was for real but she turned out to be a poser<br>I still remember all the times when she’d pull me closer<br>So blinded by fake love couldn’t see that chip all on her shoulder<br>She turned the fire that was my love into a fucking smolder<br>And now I’m running from my past like Indiana from that boulder yeah</p>
-<div id="lyrics-end"></div>
+<div id="lyrics-end-6"></div>
 </div>
 
 
@@ -1161,7 +1184,7 @@ a:focus {
 
 
 <p class="has-text-align-center">It’s you I miss</p>
-<div id="lyrics-end"></div>
+<div id="lyrics-end-7"></div>
 </div>
 </div></div></div>
 </div>
