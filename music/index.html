@@ -46,8 +46,6 @@
       if (window.carousel) {
         console.log('Swiper instance found!');
         goToSlide(7);
-        window.carousel.params.allowTouchMove = false;
-        window.carousel.update();  // Apply changes
         clearInterval(pollForSwiper);
       } else if (attempts >= maxAttempts) {
         console.error('Swiper instance not found after max attempts');
@@ -310,6 +308,11 @@ a:hover {
 }
 a:focus {
     outline: none;
+}
+
+.discography .swiper-wrapper,
+.discography .swiper-slide {
+    pointer-events: none;
 }		</style>
 		<link rel="stylesheet" id="cb-slider-style-css" href="/wp-content/plugins/carousel-block/blocks/vendor/swiper/swiper-bundle.min.css?ver=2.0.6" type="text/css" media="all">
 <style id="core-block-supports-inline-css" type="text/css">
@@ -438,7 +441,7 @@ a:focus {
 
 
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:75%">
-<div class="wp-block-cb-carousel-v2 cb-carousel-block cb-single-slide cb-rtl" data-cb-slides-per-view="1" data-cb-slides-per-group="1" data-cb-space-between="5" data-cb-speed="0" dir="rtl" data-cb-breakpoints="{&quot;768&quot;:{&quot;slidesPerView&quot;:1,&quot;slidesPerGroup&quot;:1}}"><div class="swiper"><div class="cb-wrapper swiper-wrapper">
+<div class="wp-block-cb-carousel-v2 cb-carousel-block cb-single-slide cb-rtl discography" data-cb-slides-per-view="1" data-cb-slides-per-group="1" data-cb-space-between="5" dir="rtl" data-cb-breakpoints="{&quot;768&quot;:{&quot;slidesPerView&quot;:1,&quot;slidesPerGroup&quot;:1}}"><div class="swiper"><div class="cb-wrapper swiper-wrapper">
 <div class="wp-block-cb-slide-v2 cb-slide swiper-slide">
 <p class="has-text-align-center has-huge-font-size">Fit Check</p>
 
@@ -482,15 +485,11 @@ a:focus {
 
 
 
-<p class="has-text-align-center">Like can I get a – fit check, fit check<br>You know dat all my – drip wet, drip wet<br>You know it cost a – big check, big check<br>Half o’ my pinky – lil flex, lil flex<br>4 pinkies chain off – my neck, my neck<br>And it’s 4 chainz on – my neck, my neck<br>Iced out smart watch ain’t no – Patek, Patek<br>Try rob me n’ glock – gon stretch, gon stretch<br>Yeah</p>
+<p class="has-text-align-center">Like can I get a – fit check, fit check<br>You know dat all my – drip wet, drip wet<br>You know it cost a – big check, big check<br>Half o’ my pinky – lil flex, lil flex<br>Four pinkies chain off – my neck, my neck<br>And it’s four chainz on – my neck, my neck<br>Iced out smart watch ain’t no – Patek, Patek<br>Try rob me n’ glock – gon stretch, gon stretch<br>Yeah</p>
 
 
 
-<p class="has-text-align-center">Yeah I got dis Balmain<br>all on my body<br>On my hoodie and I<br>got it all on my jeans<br>Type’o hoodie Juice wore<br>back in 2019<br>’And it’s sequins be matchin<br>the jeans silvery<br>Silver Louis V shoes,<br>hat n’ belt all on me<br>Rock dat shit with my ice<br>an’ I be looking so clean<br>An’ I iced out da glock<br>an’ iced out it’s beam<br>’Niggas ran up Saturday n<br>it left dem in last week<br>Ooh<br>and you know what I’m on<br>Zip o’ weed 4 o’ lean<br>damn that shit fucking strong<br>And I popped a couple beans<br>dammit can’t even walk<br>Come to think about it<br>how da fuck can I even talk<br>Feel like I’m on Saturn shit<br>Why’d I sip so much wok<br>But also feel like I’m the shit<br>so I don’t give a fuck<br>I Sip more lean I get more lit<br>I pour up another cup</p>
-
-
-
-<p class="has-text-align-center">Like</p>
+<p class="has-text-align-center">Yeah I got dis Balmain<br>all on my body<br>On my hoodie and I<br>got it all on my jeans<br>Type’o hoodie Juice wore<br>back in 2019<br>’And it’s sequins be matchin<br>the jeans silvery<br>,Silver Louis V shoes<br>hat n’ belt all on me<br>Rock dat shit with my ice<br>an’ I be looking so clean<br>An’ I iced out da glock<br>an’ iced out it’s beam<br>’Niggas ran up Saturday n<br>it left dem in last week<br>Ooh<br>and you know what I’m on<br>Zip o’ weed 4 o’ lean<br>damn that shit fucking strong<br>And I popped a couple beans<br>dammit can’t even walk<br>Come to think about it<br>how da fuck can I even talk<br>Feel like I’m on Saturn shit<br>Why’d I sip so much wok<br>But also feel like I’m the shit<br>so I don’t give a fuck<br>I Sip more lean I get more lit<br>I pour up another cup</p>
 
 
 
@@ -502,7 +501,11 @@ a:focus {
 
 
 
-<p class="has-text-align-center">Like can I get a – fit check, fit check<br>You know dat all my – drip wet, drip wet<br>You know it cost a – big check, big check<br>Half o’ my pinky – lil flex, lil flex<br>4 pinkies chain off – my neck, my neck<br>And it’s 4 chainz on – my neck my neck<br>Iced out smart watch ain’t no – Patek Patek<br>Try rob me n’ glock – gon stretch, gon stretch<br>Yeah</p>
+<p class="has-text-align-center">Like</p>
+
+
+
+<p class="has-text-align-center">Like can I get a – fit check, fit check<br>You know dat all my – drip wet, drip wet<br>You know it cost a – big check, big check<br>Half o’ my pinky – lil flex, lil flex<br>Four pinkies chain off – my neck, my neck<br>And it’s four chainz on – my neck, my neck<br>Iced out smart watch ain’t no – Patek Patek<br>Try rob me n’ glock – gon stretch, gon stretch<br>Yeah</p>
 </div>
 
 
