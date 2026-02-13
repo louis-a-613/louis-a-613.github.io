@@ -44,8 +44,10 @@
       window.carousel = swiperEl ? swiperEl.swiper : null;
 
       if (window.carousel) {
-        goToSlide(7);
         console.log('Swiper instance found!');
+        goToSlide(7);
+        window.carousel.params.allowTouchMove = false;
+        window.carousel.update();  // Apply changes
         clearInterval(pollForSwiper);
       } else if (attempts >= maxAttempts) {
         console.error('Swiper instance not found after max attempts');
