@@ -26,6 +26,17 @@
 </script>
 
 <script>
+  const songMap = {
+    'fit-check': 0,
+    'runaway-freestyle': 1,
+    'wanna-go-home': 2,
+    'sober': 3,
+    'chainz-bigger': 4,
+    'dirty-sprite': 5,
+    'fake-love': 6,
+    'xoxo': 7
+  };
+
   function goToSlide(index) {
     if (window.carousel && window.carousel.slideTo) {
       window.carousel.slideTo(index);
@@ -55,6 +66,19 @@
         carousel.updateAutoHeight();
       }
     });
+  }
+
+  function handleUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    const songSlug = params.get('song')?.toLowerCase();
+    
+    if (songSlug && songMap.hasOwnProperty(songSlug)) {
+      const index = songMap[songSlug];
+      goToSlide(index);
+      history.replaceState(null, '', window.location.pathname);
+    } else {
+      goToSlide(7);
+    }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -98,7 +122,7 @@
         
         window.carousel.update();
         
-        goToSlide(7);
+        handleUrlParams();
         
         setTimeout(() => {
           updateCarouselHeight(window.carousel);
