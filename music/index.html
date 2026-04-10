@@ -83,12 +83,12 @@
     if (projectSlug && projectMap.hasOwnProperty(projectSlug)) {
       if (projectSlug) {
 
-      const alwaysOpen = document.querySelectorAll('.discography, .project');
+      const alwaysOpen = document.querySelectorAll('.discography, .projects');
       alwaysOpen.forEach(heading => {
         const button = heading.querySelector('button[aria-expanded]');
         if (button) {
           button.setAttribute('aria-expanded', 'true');
-          setTimeout(() => {button.click();}, 100);
+          button.click();
         }
       });
 
