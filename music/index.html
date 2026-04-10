@@ -26,6 +26,10 @@
 </script>
 
 <script>
+  const projectMap = {
+    'off-the-rip': 0
+  };
+
   const songMap = {
     'fit-check': 0,
     'runaway-freestyle': 1,
@@ -74,7 +78,33 @@
   function handleUrlParams() {
     const params = new URLSearchParams(window.location.search);
     const songSlug = params.get('song')?.toLowerCase();
+    const projectSlug = params.get('project')?.toLowerCase();
     
+    if (projectSlug && projectMap.hasOwnProperty(projectSlug)) {
+      if (projectSlug) {
+
+      const alwaysOpen = document.querySelectorAll('.discography, .project');
+      alwaysOpen.forEach(heading => {
+        const button = heading.querySelector('button[aria-expanded]');
+        if (button) {
+          button.setAttribute('aria-expanded', 'true');
+          button.click();
+        }
+      });
+
+        if (projectMap.hasOwnProperty(projectSlug)) {
+          const heading = document.querySelector(`.${projectSlug}`);
+          if (heading) {
+            const button = heading.querySelector('button[aria-expanded]');
+            if (button) {
+              button.setAttribute('aria-expanded', 'true');
+              button.click();
+            }
+          }
+        }
+      }
+    }
+
     if (songSlug && songMap.hasOwnProperty(songSlug)) {
       const index = songMap[songSlug];
       goToSlide(index);
@@ -496,7 +526,7 @@ a:focus {
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:25%" id="music-menu">
 <div data-wp-context="{ &quot;autoclose&quot;: false, &quot;accordionItems&quot;: [] }" data-wp-interactive="core/accordion" role="group" class="wp-block-accordion is-layout-flow wp-block-accordion-is-layout-flow">
 <div data-wp-class--is-open="state.isOpen" data-wp-context="{ &quot;id&quot;: &quot;accordion-item-4&quot;, &quot;openByDefault&quot;: false }" data-wp-init="callbacks.initAccordionItems" data-wp-on-window--hashchange="callbacks.hashChange" class="wp-block-accordion-item is-layout-flow wp-block-accordion-item-is-layout-flow">
-<h3 class="wp-block-accordion-heading"><button aria-expanded="false" aria-controls="accordion-item-4-panel" data-wp-bind--aria-expanded="state.isOpen" data-wp-on--click="actions.toggle" data-wp-on--keydown="actions.handleKeyDown" id="accordion-item-4" type="button" class="wp-block-accordion-heading__toggle"><span class="wp-block-accordion-heading__toggle-title">Discography</span><span class="wp-block-accordion-heading__toggle-icon" aria-hidden="true">+</span></button></h3>
+<h3 class="wp-block-accordion-heading discography"><button aria-expanded="false" aria-controls="accordion-item-4-panel" data-wp-bind--aria-expanded="state.isOpen" data-wp-on--click="actions.toggle" data-wp-on--keydown="actions.handleKeyDown" id="accordion-item-4" type="button" class="wp-block-accordion-heading__toggle"><span class="wp-block-accordion-heading__toggle-title">Discography</span><span class="wp-block-accordion-heading__toggle-icon" aria-hidden="true">+</span></button></h3>
 
 
 
@@ -535,14 +565,14 @@ a:focus {
 
 
 <div data-wp-class--is-open="state.isOpen" data-wp-context="{ &quot;id&quot;: &quot;accordion-item-3&quot;, &quot;openByDefault&quot;: false }" data-wp-init="callbacks.initAccordionItems" data-wp-on-window--hashchange="callbacks.hashChange" class="wp-block-accordion-item is-layout-flow wp-block-accordion-item-is-layout-flow">
-<h3 class="wp-block-accordion-heading"><button aria-expanded="false" aria-controls="accordion-item-3-panel" data-wp-bind--aria-expanded="state.isOpen" data-wp-on--click="actions.toggle" data-wp-on--keydown="actions.handleKeyDown" id="accordion-item-3" type="button" class="wp-block-accordion-heading__toggle"><span class="wp-block-accordion-heading__toggle-title">Albums/EPs</span><span class="wp-block-accordion-heading__toggle-icon" aria-hidden="true">+</span></button></h3>
+<h3 class="wp-block-accordion-heading projects"><button aria-expanded="false" aria-controls="accordion-item-3-panel" data-wp-bind--aria-expanded="state.isOpen" data-wp-on--click="actions.toggle" data-wp-on--keydown="actions.handleKeyDown" id="accordion-item-3" type="button" class="wp-block-accordion-heading__toggle"><span class="wp-block-accordion-heading__toggle-title">Albums/EPs</span><span class="wp-block-accordion-heading__toggle-icon" aria-hidden="true">+</span></button></h3>
 
 
 
 <div inert aria-labelledby="accordion-item-3" data-wp-bind--inert="!state.isOpen" id="accordion-item-3-panel" role="region" class="wp-block-accordion-panel is-layout-flow wp-block-accordion-panel-is-layout-flow">
 <div data-wp-context="{ &quot;autoclose&quot;: false, &quot;accordionItems&quot;: [] }" data-wp-interactive="core/accordion" role="group" class="wp-block-accordion is-layout-flow wp-block-accordion-is-layout-flow">
 <div data-wp-class--is-open="state.isOpen" data-wp-context="{ &quot;id&quot;: &quot;accordion-item-2&quot;, &quot;openByDefault&quot;: false }" data-wp-init="callbacks.initAccordionItems" data-wp-on-window--hashchange="callbacks.hashChange" class="wp-block-accordion-item is-layout-flow wp-block-accordion-item-is-layout-flow">
-<h3 class="wp-block-accordion-heading"><button aria-expanded="false" aria-controls="accordion-item-2-panel" data-wp-bind--aria-expanded="state.isOpen" data-wp-on--click="actions.toggle" data-wp-on--keydown="actions.handleKeyDown" id="accordion-item-2" type="button" class="wp-block-accordion-heading__toggle"><span class="wp-block-accordion-heading__toggle-title">Off The Rip</span><span class="wp-block-accordion-heading__toggle-icon" aria-hidden="true">+</span></button></h3>
+<h3 class="wp-block-accordion-heading off-the-rip"><button aria-expanded="false" aria-controls="accordion-item-2-panel" data-wp-bind--aria-expanded="state.isOpen" data-wp-on--click="actions.toggle" data-wp-on--keydown="actions.handleKeyDown" id="accordion-item-2" type="button" class="wp-block-accordion-heading__toggle"><span class="wp-block-accordion-heading__toggle-title">Off The Rip</span><span class="wp-block-accordion-heading__toggle-icon" aria-hidden="true">+</span></button></h3>
 
 
 
