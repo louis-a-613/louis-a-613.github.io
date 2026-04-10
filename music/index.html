@@ -88,8 +88,7 @@
         const button = heading.querySelector('button[aria-expanded]');
         if (button) {
           button.setAttribute('aria-expanded', 'true');
-          button.click();
-          setTimeout(() => {}, 100);
+          setTimeout(() => {button.click();}, 100);
         }
       });
 
