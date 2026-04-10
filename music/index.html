@@ -79,35 +79,34 @@
     const params = new URLSearchParams(window.location.search);
     const songSlug = params.get('song')?.toLowerCase();
     const projectSlug = params.get('project')?.toLowerCase();
-    
+
     if (projectSlug && projectMap.hasOwnProperty(projectSlug)) {
-      if (projectSlug) {
-
-      const alwaysOpen = document.querySelectorAll('.discography, .projects');
-      alwaysOpen.forEach(heading => {
-        const button = heading.querySelector('button[aria-expanded]');
-        if (button) {
-          button.setAttribute('aria-expanded', 'true');
-          button.click();
-        }
-      });
-
-        if (projectMap.hasOwnProperty(projectSlug)) {
-          const heading = document.querySelector(`.${projectSlug}`);
-          if (heading) {
-            const button = heading.querySelector('button[aria-expanded]');
-            if (button) {
-              button.setAttribute('aria-expanded', 'true');
-              button.click();
-            }
-          }
-        }
+      const discographyBtn = document.querySelector('.discography button[aria-expanded]');
+      if (discographyBtn) {
+        discographyBtn.setAttribute('aria-expanded', 'true');
+        discographyBtn.click();
       }
+
+      setTimeout(() => {
+        const projectsBtn = document.querySelector('.projects button[aria-expanded]');
+        if (projectsBtn) {
+          projectsBtn.setAttribute('aria-expanded', 'true');
+          projectsBtn.click();
+        }
+      }, 300);
+
+      setTimeout(() => {
+        const projectEl = document.querySelector(`.${projectSlug}`);
+        const projectBtn = projectEl?.querySelector('button[aria-expanded]');
+        if (projectBtn) {
+          projectBtn.setAttribute('aria-expanded', 'true');
+          projectBtn.click();
+        }
+      }, 600);
     }
 
     if (songSlug && songMap.hasOwnProperty(songSlug)) {
-      const index = songMap[songSlug];
-      goToSlide(index);
+      goToSlide(songMap[songSlug]);
       history.replaceState(null, '', window.location.pathname);
     } else {
       goToSlide(10);
