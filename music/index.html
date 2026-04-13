@@ -27,7 +27,7 @@
 
 <script>
   const projectMap = {
-    'off-the-rip': 0
+    'off-the-rip': [0, 1, 2, 3, 4]
   };
 
   const songMap = {
@@ -184,6 +184,70 @@
       attempts++;
     }, 100);
   });
+
+  function getCurrentSongSlug() {
+    const index = window.carousel ? window.carousel.activeIndex : 0;
+    for (const [slug, idx] of Object.entries(songMap)) {
+      if (idx === index) return slug;
+    }
+  }
+
+  function copyLyrics(btn) {
+    const slide = btn.closest('.swiper-slide') || btn.closest('.wp-block-cb-slide-v2');
+    if (!slide) return;
+
+    const paragraphs = Array.from(slide.querySelectorAll('p.has-text-align-center'));
+    const lyricsParagraphs = paragraphs.slice(2); // skips title + "Lyrics" header
+  
+    const lyricsText = lyricsParagraphs
+      .map(p => p.innerText.trim())
+      .filter(text => text.length > 2)
+      .join('\n\n');
+
+    navigator.clipboard.writeText(lyricsText).then(() => {
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '✅ Lyrics Copied!';
+      btn.style.pointerEvents = 'none'; // prevents double-tap while showing feedback
+
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.pointerEvents = 'auto';
+      }, 2500);
+    }).catch(() => {
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '❌ Try again';
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+      }, 2000);
+    });
+  }
+
+  function copyLink(btn) {
+    const index = window.carousel ? window.carousel.activeIndex : 0;
+    const songSlug = Object.keys(songMap).find(key => songMap[key] === index) || 'punk-girl-shawty';
+
+    const baseUrl = window.location.origin + window.location.pathname;
+    let shareUrl = `\( {baseUrl}?song= \){songSlug}`;
+
+    // Append &project= ONLY if this song is part of Off The Rip (tracks 0-4)
+    for (const [projectSlug, songIndices] of Object.entries(projectMap)) {
+      if (songIndices.includes(index)) {
+        shareUrl += `&project=${projectSlug}`;
+        break;
+      }
+    }
+
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '🔗 Link Copied!';
+      btn.style.pointerEvents = 'none';
+
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.pointerEvents = 'auto';
+      }, 2500);
+    });
+  }
 </script>
 
 <meta name="robots" content="max-image-preview:large">
@@ -228,6 +292,10 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 .wp-block-archives{box-sizing:border-box}.wp-block-archives-dropdown label{display:block}
 /*# sourceURL=/wp-includes/blocks/archives/style.min.css */
 </style>
+<style id="wp-block-button-inline-css" type="text/css">
+.wp-block-button__link{align-content:center;box-sizing:border-box;cursor:pointer;display:inline-block;height:100%;text-align:center;word-break:break-word}.wp-block-button__link.aligncenter{text-align:center}.wp-block-button__link.alignright{text-align:right}:where(.wp-block-button__link){border-radius:9999px;box-shadow:none;padding:calc(.667em + 2px) calc(1.333em + 2px);text-decoration:none}.wp-block-button[style*=text-decoration] .wp-block-button__link{text-decoration:inherit}.wp-block-buttons>.wp-block-button.has-custom-width{max-width:none}.wp-block-buttons>.wp-block-button.has-custom-width .wp-block-button__link{width:100%}.wp-block-buttons>.wp-block-button.has-custom-font-size .wp-block-button__link{font-size:inherit}.wp-block-buttons>.wp-block-button.wp-block-button__width-25{width:calc(25% - var(--wp--style--block-gap, .5em)*.75)}.wp-block-buttons>.wp-block-button.wp-block-button__width-50{width:calc(50% - var(--wp--style--block-gap, .5em)*.5)}.wp-block-buttons>.wp-block-button.wp-block-button__width-75{width:calc(75% - var(--wp--style--block-gap, .5em)*.25)}.wp-block-buttons>.wp-block-button.wp-block-button__width-100{flex-basis:100%;width:100%}.wp-block-buttons.is-vertical>.wp-block-button.wp-block-button__width-25{width:25%}.wp-block-buttons.is-vertical>.wp-block-button.wp-block-button__width-50{width:50%}.wp-block-buttons.is-vertical>.wp-block-button.wp-block-button__width-75{width:75%}.wp-block-button.is-style-squared,.wp-block-button__link.wp-block-button.is-style-squared{border-radius:0}.wp-block-button.no-border-radius,.wp-block-button__link.no-border-radius{border-radius:0!important}:root :where(.wp-block-button .wp-block-button__link.is-style-outline),:root :where(.wp-block-button.is-style-outline>.wp-block-button__link){border:2px solid;padding:.667em 1.333em}:root :where(.wp-block-button .wp-block-button__link.is-style-outline:not(.has-text-color)),:root :where(.wp-block-button.is-style-outline>.wp-block-button__link:not(.has-text-color)){color:currentColor}:root :where(.wp-block-button .wp-block-button__link.is-style-outline:not(.has-background)),:root :where(.wp-block-button.is-style-outline>.wp-block-button__link:not(.has-background)){background-color:initial;background-image:none}
+/*# sourceURL=/wp-includes/blocks/button/style.min.css */
+</style>
 <style id="wp-block-heading-inline-css" type="text/css">
 h1:where(.wp-block-heading).has-background,h2:where(.wp-block-heading).has-background,h3:where(.wp-block-heading).has-background,h4:where(.wp-block-heading).has-background,h5:where(.wp-block-heading).has-background,h6:where(.wp-block-heading).has-background{padding:1.25em 2.375em}h1.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h1.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h2.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h2.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h3.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h3.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h4.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h4.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h5.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h5.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]),h6.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]),h6.has-text-align-right[style*=writing-mode]:where([style*=vertical-rl]){rotate:180deg}
 /*# sourceURL=/wp-includes/blocks/heading/style.min.css */
@@ -239,6 +307,10 @@ ol.wp-block-latest-comments{box-sizing:border-box;margin-left:0}:where(.wp-block
 <style id="wp-block-latest-posts-inline-css" type="text/css">
 .wp-block-latest-posts{box-sizing:border-box}.wp-block-latest-posts.alignleft{margin-right:2em}.wp-block-latest-posts.alignright{margin-left:2em}.wp-block-latest-posts.wp-block-latest-posts__list{list-style:none}.wp-block-latest-posts.wp-block-latest-posts__list li{clear:both;overflow-wrap:break-word}.wp-block-latest-posts.is-grid{display:flex;flex-wrap:wrap}.wp-block-latest-posts.is-grid li{margin:0 1.25em 1.25em 0;width:100%}@media (min-width:600px){.wp-block-latest-posts.columns-2 li{width:calc(50% - .625em)}.wp-block-latest-posts.columns-2 li:nth-child(2n){margin-right:0}.wp-block-latest-posts.columns-3 li{width:calc(33.33333% - .83333em)}.wp-block-latest-posts.columns-3 li:nth-child(3n){margin-right:0}.wp-block-latest-posts.columns-4 li{width:calc(25% - .9375em)}.wp-block-latest-posts.columns-4 li:nth-child(4n){margin-right:0}.wp-block-latest-posts.columns-5 li{width:calc(20% - 1em)}.wp-block-latest-posts.columns-5 li:nth-child(5n){margin-right:0}.wp-block-latest-posts.columns-6 li{width:calc(16.66667% - 1.04167em)}.wp-block-latest-posts.columns-6 li:nth-child(6n){margin-right:0}}:root :where(.wp-block-latest-posts.is-grid){padding:0}:root :where(.wp-block-latest-posts.wp-block-latest-posts__list){padding-left:0}.wp-block-latest-posts__post-author,.wp-block-latest-posts__post-date{display:block;font-size:.8125em}.wp-block-latest-posts__post-excerpt,.wp-block-latest-posts__post-full-content{margin-bottom:1em;margin-top:.5em}.wp-block-latest-posts__featured-image a{display:inline-block}.wp-block-latest-posts__featured-image img{height:auto;max-width:100%;width:auto}.wp-block-latest-posts__featured-image.alignleft{float:left;margin-right:1em}.wp-block-latest-posts__featured-image.alignright{float:right;margin-left:1em}.wp-block-latest-posts__featured-image.aligncenter{margin-bottom:1em;text-align:center}
 /*# sourceURL=/wp-includes/blocks/latest-posts/style.min.css */
+</style>
+<style id="wp-block-buttons-inline-css" type="text/css">
+.wp-block-buttons{box-sizing:border-box}.wp-block-buttons.is-vertical{flex-direction:column}.wp-block-buttons.is-vertical>.wp-block-button:last-child{margin-bottom:0}.wp-block-buttons>.wp-block-button{display:inline-block;margin:0}.wp-block-buttons.is-content-justification-left{justify-content:flex-start}.wp-block-buttons.is-content-justification-left.is-vertical{align-items:flex-start}.wp-block-buttons.is-content-justification-center{justify-content:center}.wp-block-buttons.is-content-justification-center.is-vertical{align-items:center}.wp-block-buttons.is-content-justification-right{justify-content:flex-end}.wp-block-buttons.is-content-justification-right.is-vertical{align-items:flex-end}.wp-block-buttons.is-content-justification-space-between{justify-content:space-between}.wp-block-buttons.aligncenter{text-align:center}.wp-block-buttons:not(.is-content-justification-space-between,.is-content-justification-right,.is-content-justification-left,.is-content-justification-center) .wp-block-button.aligncenter{margin-left:auto;margin-right:auto;width:100%}.wp-block-buttons[style*=text-decoration] .wp-block-button,.wp-block-buttons[style*=text-decoration] .wp-block-button__link{text-decoration:inherit}.wp-block-buttons.has-custom-font-size .wp-block-button__link{font-size:inherit}.wp-block-buttons .wp-block-button__link{width:100%}.wp-block-button.aligncenter{text-align:center}
+/*# sourceURL=/wp-includes/blocks/buttons/style.min.css */
 </style>
 <style id="wp-block-search-inline-css" type="text/css">
 .wp-block-search__button{margin-left:10px;word-break:normal}.wp-block-search__button.has-icon{line-height:0}.wp-block-search__button svg{height:1.25em;min-height:24px;min-width:24px;width:1.25em;fill:currentColor;vertical-align:text-bottom}:where(.wp-block-search__button){border:1px solid #ccc;padding:6px 10px}.wp-block-search__inside-wrapper{display:flex;flex:auto;flex-wrap:nowrap;max-width:100%}.wp-block-search__label{width:100%}.wp-block-search.wp-block-search__button-only .wp-block-search__button{box-sizing:border-box;display:flex;flex-shrink:0;justify-content:center;margin-left:0;max-width:100%}.wp-block-search.wp-block-search__button-only .wp-block-search__inside-wrapper{min-width:0!important;transition-property:width}.wp-block-search.wp-block-search__button-only .wp-block-search__input{flex-basis:100%;transition-duration:.3s}.wp-block-search.wp-block-search__button-only.wp-block-search__searchfield-hidden,.wp-block-search.wp-block-search__button-only.wp-block-search__searchfield-hidden .wp-block-search__inside-wrapper{overflow:hidden}.wp-block-search.wp-block-search__button-only.wp-block-search__searchfield-hidden .wp-block-search__input{border-left-width:0!important;border-right-width:0!important;flex-basis:0;flex-grow:0;margin:0;min-width:0!important;padding-left:0!important;padding-right:0!important;width:0!important}:where(.wp-block-search__input){appearance:none;border:1px solid #949494;flex-grow:1;font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;letter-spacing:inherit;line-height:inherit;margin-left:0;margin-right:0;min-width:3rem;padding:8px;text-decoration:unset!important;text-transform:inherit}:where(.wp-block-search__button-inside .wp-block-search__inside-wrapper){background-color:#fff;border:1px solid #949494;box-sizing:border-box;padding:4px}:where(.wp-block-search__button-inside .wp-block-search__inside-wrapper) .wp-block-search__input{border:none;border-radius:0;padding:0 4px}:where(.wp-block-search__button-inside .wp-block-search__inside-wrapper) .wp-block-search__input:focus{outline:none}:where(.wp-block-search__button-inside .wp-block-search__inside-wrapper) :where(.wp-block-search__button){padding:4px 8px}.wp-block-search.aligncenter .wp-block-search__inside-wrapper{margin:auto}.wp-block[data-align=right] .wp-block-search.wp-block-search__button-only .wp-block-search__inside-wrapper{float:right}
@@ -450,7 +522,7 @@ a:focus {
 }		</style>
 		<link rel="stylesheet" id="cb-slider-style-css" href="/wp-content/plugins/carousel-block/blocks/vendor/swiper/swiper-bundle.min.css?ver=2.1.1" type="text/css" media="all">
 <style id="core-block-supports-inline-css" type="text/css">
-.wp-container-core-social-links-is-layout-16018d1d{justify-content:center;}.wp-container-core-columns-is-layout-9d6595d7{flex-wrap:nowrap;}
+.wp-container-core-social-links-is-layout-16018d1d{justify-content:center;}.wp-container-core-buttons-is-layout-9a7cdcfd{flex-direction:column;align-items:center;}.wp-container-core-columns-is-layout-9d6595d7{flex-wrap:nowrap;}
 /*# sourceURL=core-block-supports-inline-css */
 </style>
 
@@ -523,6 +595,16 @@ a:focus {
 
 <div class="wp-block-columns is-layout-flex wp-container-core-columns-is-layout-9d6595d7 wp-block-columns-is-layout-flex">
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:25%" id="music-menu">
+<div class="wp-block-buttons is-vertical is-content-justification-center is-layout-flex wp-container-core-buttons-is-layout-9a7cdcfd wp-block-buttons-is-layout-flex">
+<div class="wp-block-button has-custom-width wp-block-button__width-100 is-style-fill"><a class="wp-block-button__link has-small-font-size has-custom-font-size wp-element-button" href="javascript:copyLink(this);" style="border-top-left-radius:10px;border-top-right-radius:10px;border-bottom-left-radius:10px;border-bottom-right-radius:10px">Copy Link</a></div>
+
+
+
+<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link has-small-font-size has-custom-font-size wp-element-button" href="javascript:copyLyrisc(this);" style="border-top-left-radius:10px;border-top-right-radius:10px;border-bottom-left-radius:10px;border-bottom-right-radius:10px">Copy Lyrics</a></div>
+</div>
+
+
+
 <div data-wp-context="{ &quot;autoclose&quot;: false, &quot;accordionItems&quot;: [] }" data-wp-interactive="core/accordion" role="group" class="wp-block-accordion is-layout-flow wp-block-accordion-is-layout-flow">
 <div data-wp-class--is-open="state.isOpen" data-wp-context="{ &quot;id&quot;: &quot;accordion-item-4&quot;, &quot;openByDefault&quot;: false }" data-wp-init="callbacks.initAccordionItems" data-wp-on-window--hashchange="callbacks.hashChange" class="wp-block-accordion-item is-layout-flow wp-block-accordion-item-is-layout-flow">
 <h3 class="wp-block-accordion-heading discography"><button aria-expanded="false" aria-controls="accordion-item-4-panel" data-wp-bind--aria-expanded="state.isOpen" data-wp-on--click="actions.toggle" data-wp-on--keydown="actions.handleKeyDown" id="accordion-item-4" type="button" class="wp-block-accordion-heading__toggle"><span class="wp-block-accordion-heading__toggle-title">Discography</span><span class="wp-block-accordion-heading__toggle-icon" aria-hidden="true">+</span></button></h3>
@@ -1452,10 +1534,6 @@ a:focus {
 
 <div class="wp-block-cb-slide-v2 cb-slide swiper-slide">
 <p class="has-text-align-center has-huge-font-size">Punk Girl Shawty</p>
-
-
-
-<div aria-hidden="true" class="wp-block-spacer"></div>
 
 
 
