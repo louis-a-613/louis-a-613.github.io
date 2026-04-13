@@ -193,7 +193,8 @@
   }
 
   function copyLyrics(btn) {
-    const slide = btn.closest('.swiper-slide') || btn.closest('.wp-block-cb-slide-v2');
+    if (!window.carousel) return;
+    const slide = window.carousel.slides[window.carousel.activeIndex];
     if (!slide) return;
 
     const paragraphs = Array.from(slide.querySelectorAll('p.has-text-align-center'));
