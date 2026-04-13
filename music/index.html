@@ -227,7 +227,7 @@
     const songSlug = Object.keys(songMap).find(key => songMap[key] === index) || 'punk-girl-shawty';
 
     const baseUrl = window.location.origin + window.location.pathname;
-    let shareUrl = `\( {baseUrl}?song= \){songSlug}`;
+    let shareUrl = `${baseUrl}?song=${songSlug}`;
 
     // Append &project= ONLY if this song is part of Off The Rip (tracks 0-4)
     for (const [projectSlug, songIndices] of Object.entries(projectMap)) {
@@ -600,7 +600,7 @@ a:focus {
 
 
 
-<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link has-small-font-size has-custom-font-size wp-element-button" href="javascript:copyLyrisc(this);" style="border-top-left-radius:10px;border-top-right-radius:10px;border-bottom-left-radius:10px;border-bottom-right-radius:10px">Copy Lyrics</a></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link has-small-font-size has-custom-font-size wp-element-button" href="javascript:copyLyrics(this);" style="border-top-left-radius:10px;border-top-right-radius:10px;border-bottom-left-radius:10px;border-bottom-right-radius:10px">Copy Lyrics</a></div>
 </div>
 
 
