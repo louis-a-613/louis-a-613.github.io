@@ -55,32 +55,69 @@
   function goToSlide(index) {
     if (window.carousel && window.carousel.slideTo) {
       window.carousel.slideTo(index);
-    } else {
-      console.error('Carousel not ready yet - try again');
     }
   }
 
   function updateCarouselHeight(carousel) {
     if (!carousel) return;
-    
     const activeSlide = carousel.slides[carousel.activeIndex];
     if (!activeSlide) return;
-    
     requestAnimationFrame(() => {
       const anchor = activeSlide.querySelector(`#lyrics-end-${carousel.activeIndex}`);
-      
-      const height = anchor 
-        ? anchor.offsetTop + anchor.offsetHeight + 20 
+      const height = anchor
+        ? anchor.offsetTop + anchor.offsetHeight + 20
         : activeSlide.scrollHeight;
-      
       carousel.el.style.height = `${height}px`;
       carousel.el.style.overflowY = 'hidden';
-      
       carousel.update();
-      if (carousel.updateAutoHeight) {
-        carousel.updateAutoHeight();
+      if (carousel.updateAutoHeight) carousel.updateAutoHeight();
+    });
+  }
+
+  function openAccordionChain(buttons, onComplete) {
+    if (!buttons.length) {
+      if (onComplete) onComplete();
+      return;
+    }
+
+    const [btn, ...rest] = buttons;
+
+    if (btn.getAttribute('aria-expanded') === 'true') {
+      openAccordionChain(rest, onComplete);
+      return;
+    }
+
+    const panelId = btn.getAttribute('aria-controls');
+    const panel = panelId ? document.getElementById(panelId) : null;
+
+    if (!panel) {
+      btn.click();
+      requestAnimationFrame(() => openAccordionChain(rest, onComplete));
+      return;
+    }
+
+    let settled = false;
+
+    const observer = new MutationObserver(() => {
+      if (!panel.hasAttribute('inert') && !settled) {
+        settled = true;
+        observer.disconnect();
+        clearTimeout(safetyTimer);
+        openAccordionChain(rest, onComplete);
       }
     });
+
+    observer.observe(panel, { attributes: true, attributeFilter: ['inert'] });
+
+    const safetyTimer = setTimeout(() => {
+      if (!settled) {
+        settled = true;
+        observer.disconnect();
+        openAccordionChain(rest, onComplete);
+      }
+    }, 2000);
+
+    btn.click();
   }
 
   function handleUrlParams() {
@@ -88,36 +125,25 @@
     const songSlug = params.get('song')?.toLowerCase();
     const projectSlug = params.get('project')?.toLowerCase();
 
-    if (projectSlug && projectMap.hasOwnProperty(projectSlug)) {
-      const discographyBtn = document.querySelector('.discography button[aria-expanded]');
-      if (discographyBtn) {
-        discographyBtn.setAttribute('aria-expanded', 'true');
-        discographyBtn.click();
+    const navigateToSong = () => {
+      if (songSlug && Object.hasOwn(songMap, songSlug)) {
+        goToSlide(songMap[songSlug]);
+      } else {
+        goToSlide(10);
       }
-
-      setTimeout(() => {
-        const projectsBtn = document.querySelector('.projects button[aria-expanded]');
-        if (projectsBtn) {
-          projectsBtn.setAttribute('aria-expanded', 'true');
-          projectsBtn.click();
-        }
-      }, 300);
-
-      setTimeout(() => {
-        const projectEl = document.querySelector(`.${projectSlug}`);
-        const projectBtn = projectEl?.querySelector('button[aria-expanded]');
-        if (projectBtn) {
-          projectBtn.setAttribute('aria-expanded', 'true');
-          projectBtn.click();
-        }
-      }, 600);
-    }
-
-    if (songSlug && songMap.hasOwnProperty(songSlug)) {
-      goToSlide(songMap[songSlug]);
       history.replaceState(null, '', window.location.pathname);
+    };
+
+    if (projectSlug && Object.hasOwn(projectMap, projectSlug)) {
+      const buttons = [
+        document.querySelector('.discography button[aria-expanded]'),
+        document.querySelector('.projects button[aria-expanded]'),
+        document.querySelector(`.${projectSlug} button[aria-expanded]`),
+      ].filter(Boolean);
+
+      openAccordionChain(buttons, navigateToSong);
     } else {
-      goToSlide(10);
+      navigateToSong();
     }
   }
 
@@ -127,75 +153,56 @@
     const maxAttempts = 20;
 
     const pollForSwiper = setInterval(() => {
-      const swiperEl = outerContainer ? outerContainer.querySelector('.swiper') : null;
-      window.carousel = swiperEl ? swiperEl.swiper : null;
+      const swiperEl = outerContainer?.querySelector('.swiper');
+      window.carousel = swiperEl?.swiper ?? null;
 
-      if (window.carousel) {        
+      if (window.carousel) {
         window.carousel.allowTouchMove = false;
         window.carousel.allowSlideNext = false;
         window.carousel.allowSlidePrev = false;
-        
         window.carousel.params.allowTouchMove = false;
         window.carousel.params.simulateTouch = false;
         window.carousel.params.touchRatio = 0;
         window.carousel.params.touchAngle = 0;
         window.carousel.params.shortSwipes = false;
         window.carousel.params.longSwipes = false;
-        
+
         const swiperContainer = window.carousel.el;
-        
         ['touchstart', 'touchmove', 'touchend', 'mousedown', 'mousemove', 'mouseup'].forEach(eventType => {
           swiperContainer.addEventListener(eventType, (e) => {
             const target = e.target;
-            const isInteractive = target.tagName === 'IFRAME' || 
-                                 target.closest('iframe') ||
-                                 target.tagName === 'A' ||
-                                 target.closest('a');
-            
-            if (!isInteractive) {
-              e.stopImmediatePropagation();
-            }
+            const isInteractive = target.tagName === 'IFRAME' ||
+                                  target.closest('iframe') ||
+                                  target.tagName === 'A' ||
+                                  target.closest('a');
+            if (!isInteractive) e.stopImmediatePropagation();
           }, true);
         });
-        
-        window.carousel.update();
-        
-        handleUrlParams();
-        
-        setTimeout(() => {
-          updateCarouselHeight(window.carousel);
-        }, 100);
 
-        window.carousel.on('slideChange', () => {
-          updateCarouselHeight(window.carousel);
-        });
-        
-        window.carousel.on('slideChangeTransitionEnd', () => {
-          updateCarouselHeight(window.carousel);
-        });
+        window.carousel.update();
+        handleUrlParams();
+
+        setTimeout(() => updateCarouselHeight(window.carousel), 100);
+
+        window.carousel.on('slideChange', () => updateCarouselHeight(window.carousel));
+        window.carousel.on('slideChangeTransitionEnd', () => updateCarouselHeight(window.carousel));
 
         let resizeTimeout;
         window.addEventListener('resize', () => {
           clearTimeout(resizeTimeout);
-          resizeTimeout = setTimeout(() => {
-            updateCarouselHeight(window.carousel);
-          }, 150);
+          resizeTimeout = setTimeout(() => updateCarouselHeight(window.carousel), 150);
         });
 
         clearInterval(pollForSwiper);
-      } else if (attempts >= maxAttempts) {
-        console.error('Swiper instance not found after max attempts');
+      } else if (++attempts >= maxAttempts) {
         clearInterval(pollForSwiper);
       }
-      attempts++;
     }, 100);
   });
 
   function getCurrentSongSlug() {
-    const index = window.carousel ? window.carousel.activeIndex : 0;
-    for (const [slug, idx] of Object.entries(songMap)) {
-      if (idx === index) return slug;
-    }
+    const index = window.carousel?.activeIndex ?? 0;
+    return Object.keys(songMap).find(key => songMap[key] === index);
   }
 
   function copyLyrics(btn) {
@@ -203,40 +210,31 @@
     const slide = window.carousel.slides[window.carousel.activeIndex];
     if (!slide) return;
 
-    const paragraphs = Array.from(slide.querySelectorAll('p.has-text-align-center'));
-    const lyricsParagraphs = paragraphs.slice(2); // skips title + "Lyrics" header
-  
-    const lyricsText = lyricsParagraphs
+    const lyricsText = Array.from(
+      slide.querySelectorAll('p.has-text-align-center:not(.has-huge-font-size)')
+    )
       .map(p => p.innerText.trim())
-      .filter(text => text.length > 2)
+      .filter(text => text.length > 0)
       .join('\n\n');
 
     navigator.clipboard.writeText(lyricsText).then(() => {
-      const originalText = btn.innerHTML;
+      const original = btn.innerHTML;
       btn.innerHTML = '✅ Lyrics Copied!';
-      btn.style.pointerEvents = 'none'; // prevents double-tap while showing feedback
-
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.style.pointerEvents = 'auto';
-      }, 2500);
+      btn.style.pointerEvents = 'none';
+      setTimeout(() => { btn.innerHTML = original; btn.style.pointerEvents = 'auto'; }, 2500);
     }).catch(() => {
-      const originalText = btn.innerHTML;
+      const original = btn.innerHTML;
       btn.innerHTML = '❌ Try again';
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-      }, 2000);
+      setTimeout(() => { btn.innerHTML = original; }, 2000);
     });
   }
 
   function copyLink(btn) {
-    const index = window.carousel ? window.carousel.activeIndex : 0;
-    const songSlug = Object.keys(songMap).find(key => songMap[key] === index) || 'punk-girl-shawty';
-
+    const index = window.carousel?.activeIndex ?? 0;
+    const songSlug = Object.keys(songMap).find(key => songMap[key] === index) ?? 'punk-girl-shawty';
     const baseUrl = window.location.origin + window.location.pathname;
     let shareUrl = `${baseUrl}?song=${songSlug}`;
 
-    // Append &project= ONLY if this song is part of Off The Rip (tracks 0-4)
     for (const [projectSlug, songIndices] of Object.entries(projectMap)) {
       if (songIndices.includes(index)) {
         shareUrl += `&project=${projectSlug}`;
@@ -245,14 +243,10 @@
     }
 
     navigator.clipboard.writeText(shareUrl).then(() => {
-      const originalText = btn.innerHTML;
+      const original = btn.innerHTML;
       btn.innerHTML = '🔗 Link Copied!';
       btn.style.pointerEvents = 'none';
-
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.style.pointerEvents = 'auto';
-      }, 2500);
+      setTimeout(() => { btn.innerHTML = original; btn.style.pointerEvents = 'auto'; }, 2500);
     });
   }
 </script>
