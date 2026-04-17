@@ -24,11 +24,22 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebPage",
-  "url": "https://louis-a.com/connect/",
-  "about": {
-    "@id": "https://louis-a.com/#artist"
-  }
+  "@graph": [
+    {
+      "@type": "ContactPage",
+      "@id": "https://louis-a.com/connect/#webpage",
+      "url": "https://louis-a.com/connect/",
+      "name": "Connect – Louis Λ",
+      "description": "Get in touch with Louis Λ (Louis A) for bookings, features, press, or just to say what's up! Connect on Spotify, SoundCloud, YouTube, TikTok, Instagram, Facebook, X, or send an e-mail using this form.",
+      "isPartOf": { "@id": "https://louis-a.com/#website" },
+      "mainEntity": { "@id": "https://louis-a.com/#artist" }
+    },
+    {
+      "@type": ["Person", "MusicGroup"],
+      "@id": "https://louis-a.com/#artist",
+      "name": "Louis Λ"
+    }
+  ]
 }
 </script>
 
