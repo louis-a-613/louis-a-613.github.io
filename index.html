@@ -25,49 +25,76 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": ["Person", "MusicGroup"],
-  "@id": "https://louis-a.com/#artist",
-  "name": "Louis Λ",
-  "alternateName": ["Louis A", "louis_a_613"],
-  "url": "https://louis-a.com/",
-  "image": "https://louis-a.com/wp-content/uploads/2025/08/louis-a.png",
-  "description": "Louis Λ captivates as an artist and storyteller, forging narratives that bridge the realms of memory, ambition, and destiny. Inspired by Polo G, Virgil Abloh’s 3% rule, and the passing of his friend Alexandre (Λlex) Joaquim Pires. Born and raised in Ottawa, Ontario (in the 613 area code). His sound captures the essence of evolution from loss to rebirth, and hardship to victory.",
-  "genre": ["Rap", "Melodic Rap", "Trap", "Melodic Trap", "Rock", "Pop Punk", "Drill"],
-  "birthDate": "1999-06-18",
-  "gender": "Non-binary",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Ottawa",
-    "addressRegion": "ON",
-    "addressCountry": "CA"
-  },
-  "birthPlace": {
-    "@type": "Place",
-    "name": "Ottawa, Ontario, Canada"
-  },
-  "sameAs": [
-    "https://musicbrainz.org/artist/b5802cf0-b8e9-4021-9694-01a5fb8c764e",
-    "https://open.spotify.com/artist/6eIW5M76H1BurvoUFYOJKv",
-    "https://www.tiktok.com/@louis_a_613",
-    "https://www.youtube.com/@louis_a_613",
-    "https://soundcloud.com/louis_a_613",
-    "https://www.instagram.com/louis_a_613/",
-    "https://x.com/louis_a_613",
-    "https://www.facebook.com/louis.a.music.613/"
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://louis-a.com/#website",
+      "url": "https://louis-a.com/",
+      "name": "Louis Λ",
+      "alternateName": ["Louis A", "louis_a_613"],
+      "mainEntity": { "@id": "https://louis-a.com/#artist" }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://louis-a.com/#webpage",
+      "url": "https://louis-a.com/",
+      "name": "Louis Λ – Next up Rockstar/Rapper",
+      "isPartOf": { "@id": "https://louis-a.com/#website" },
+      "about": { "@id": "https://louis-a.com/#artist" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://louis-a.com/wp-content/uploads/2025/08/default-header.jpg",
+        "width": 1620,
+        "height": 1080,
+        "caption": "DJ turntables"
+      }
+    },
+    {
+      "@type": ["Person", "MusicGroup"],
+      "@id": "https://louis-a.com/#artist",
+      "name": "Louis Λ",
+      "alternateName": ["Louis A", "louis_a_613"],
+      "url": "https://louis-a.com/",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://louis-a.com/wp-content/uploads/2026/02/Louis-A-1-2048x2048.jpg",
+        "width": 2048,
+        "height": 2048,
+        "caption": "Louis Λ"
+      },
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://louis-a.com/wp-content/uploads/2025/08/louis-a.png",
+        "width": 760,
+        "height": 376,
+        "caption": "Louis Λ logo"
+      },
+      "description": "Louis Λ captivates as an artist and storyteller, forging narratives that bridge the realms of memory, ambition, and destiny. Inspired by Polo G, Virgil Abloh's 3% rule, and the passing of his friend Alexandre (Λlex) Joaquim Pires. Born and raised in Ottawa, Ontario (in the 613 area code). His sound captures the essence of evolution from loss to rebirth, and hardship to victory.",
+      "genre": ["Rap", "Melodic Rap", "Trap", "Melodic Trap", "Rock", "Pop Punk", "Drill"],
+      "birthDate": "1999-06-18",
+      "gender": "Non-binary",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Ottawa",
+        "addressRegion": "ON",
+        "addressCountry": "CA"
+      },
+      "birthPlace": {
+        "@type": "Place",
+        "name": "Ottawa, Ontario, Canada"
+      },
+      "sameAs": [
+        "https://musicbrainz.org/artist/b5802cf0-b8e9-4021-9694-01a5fb8c764e",
+        "https://open.spotify.com/artist/6eIW5M76H1BurvoUFYOJKv",
+        "https://www.tiktok.com/@louis_a_613",
+        "https://www.youtube.com/@louis_a_613",
+        "https://soundcloud.com/louis_a_613",
+        "https://www.instagram.com/louis_a_613/",
+        "https://x.com/louis_a_613",
+        "https://www.facebook.com/louis.a.music.613/"
+      ]
+    }
   ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Louis Λ",
-  "alternateName": ["Louis A", "louis_a_613"],
-  "url": "https://louis-a.com/",
-  "mainEntity": {
-    "@id": "https://louis-a.com/#artist"
-  }
 }
 </script>
 
