@@ -24,11 +24,32 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebPage",
-  "url": "https://louis-a.com/about-me/",
-  "about": {
-    "@id": "https://louis-a.com/#artist"
-  }
+  "@graph": [
+    {
+      "@type": "ProfilePage",
+      "@id": "https://louis-a.com/about-me/#webpage",
+      "url": "https://louis-a.com/about-me/",
+      "name": "About Me – Louis Λ",
+      "description": "Read the story behind Louis Λ (Louis A), the Ottawa rockstar/rapper. The name, the inspirations, and the sound.",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://louis-a.com/#website"
+      },
+      "mainEntity": { "@id": "https://louis-a.com/#artist" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://louis-a.com/wp-content/uploads/2026/02/Louis-A-1-2048x2048.jpg",
+        "width": 2048,
+        "height": 2048,
+        "caption": "Louis Λ"
+      }
+    },
+    {
+      "@type": ["Person", "MusicGroup"],
+      "@id": "https://louis-a.com/#artist",
+      "name": "Louis Λ"
+    }
+  ]
 }
 </script>
 
