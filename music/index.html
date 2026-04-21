@@ -893,6 +893,34 @@ body.custom-background { background-color: #0a0a0a; }
     display: none !important;
 }
 
+#accordion-item-6-panel {
+  max-height: 70vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #444 transparent;
+}
+
+/* Chrome, Safari, Edge */
+#accordion-item-6-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+#accordion-item-6-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#accordion-item-6-panel::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 4px;
+}
+
+#accordion-item-6-panel::-webkit-scrollbar-thumb:hover {
+  background-color: #666;
+}
+
 .site-info {
     display: none !important;
 }
