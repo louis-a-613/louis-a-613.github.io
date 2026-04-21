@@ -468,6 +468,17 @@
     if (canonicalLink) canonicalLink.setAttribute('href', fullUrl);
   }
 
+  function resetDocumentMetadataToDefaults() {
+    const bareUrl = window.location.origin + window.location.pathname;
+
+    document.title = DEFAULT_TITLE;
+    setMeta('og:title', DEFAULT_TITLE, 'property');
+    setMeta('og:url', bareUrl, 'property');
+
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) canonicalLink.setAttribute('href', bareUrl);
+  }
+
   // --- Navigation -----------------------------------------------------------
 
   function goToSlide(index, { updateUrl = true, pushHistory = true } = {}) {
@@ -570,9 +581,11 @@
         history.replaceState(null, '', url);
         updateDocumentMetadata(targetIndex, url);
       } else {
+        // Bare load: keep URL and title generic even though we're showing
+        // the latest song by default. User didn't request it specifically.
         goToSlide(targetIndex, { updateUrl: false, pushHistory: false });
         history.replaceState(null, '', window.location.pathname);
-        updateDocumentMetadata(targetIndex, window.location.pathname);
+        resetDocumentMetadataToDefaults();
       }
     };
 
@@ -594,13 +607,17 @@
   window.addEventListener('popstate', () => {
     const params = new URLSearchParams(window.location.search);
     const songSlug = params.get('song')?.toLowerCase();
-    const targetIndex = songSlug && Object.hasOwn(songMap, songSlug)
-      ? songMap[songSlug]
-      : 10;
+    const hasValidSong = songSlug && Object.hasOwn(songMap, songSlug);
+    const targetIndex = hasValidSong ? songMap[songSlug] : 10;
 
     // Don't re-push history on popstate — the browser already updated the URL.
     goToSlide(targetIndex, { updateUrl: false, pushHistory: false });
-    updateDocumentMetadata(targetIndex, window.location.pathname + window.location.search);
+
+    if (hasValidSong) {
+      updateDocumentMetadata(targetIndex, window.location.pathname + window.location.search);
+    } else {
+      resetDocumentMetadataToDefaults();
+    }
   });
 
   // --- Bootstrap ------------------------------------------------------------
