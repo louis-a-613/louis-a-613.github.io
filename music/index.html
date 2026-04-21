@@ -610,6 +610,24 @@
     let attempts = 0;
     const maxAttempts = 20;
 
+    const discographyPanel = document.getElementById('accordion-item-6-panel');
+    if (discographyPanel) {
+      const updateOverflowState = () => {
+        const isOverflowing = discographyPanel.scrollHeight > discographyPanel.clientHeight + 1;
+        discographyPanel.classList.toggle('is-overflowing', isOverflowing);
+      };
+
+      // Watch for content size changes (accordion expand/collapse)
+      const contentObserver = new ResizeObserver(updateOverflowState);
+      contentObserver.observe(discographyPanel);
+
+      // Also react to viewport resize (70vh changes as window resizes)
+      window.addEventListener('resize', updateOverflowState);
+
+      // Initial check
+      updateOverflowState();
+    }
+
     const pollForSwiper = setInterval(() => {
       const swiperEl = outerContainer?.querySelector('.swiper');
       window.carousel = swiperEl?.swiper ?? null;
@@ -895,12 +913,15 @@ body.custom-background { background-color: #0a0a0a; }
 
 #accordion-item-6-panel {
   max-height: 70vh;
-  overflow-y: auto;
   overscroll-behavior: contain;
 
   /* Firefox */
   scrollbar-width: thin;
   scrollbar-color: #444 transparent;
+}
+
+#accordion-item-6-panel.is-overflowing {
+  overflow-y: auto;
 }
 
 /* Chrome, Safari, Edge */
