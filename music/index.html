@@ -403,9 +403,72 @@
     'punk-girl-shawty': 10
   };
 
-  function goToSlide(index) {
-    if (window.carousel && window.carousel.slideTo) {
-      window.carousel.slideTo(index);
+  const indexToSlug = Object.fromEntries(
+    Object.entries(songMap).map(([slug, idx]) => [idx, slug])
+  );
+
+  const SITE_NAME = 'Louis Λ';
+  const DEFAULT_TITLE = 'Music – Louis Λ';
+  const DEFAULT_DESCRIPTION = 'Louis Λ (Louis A): Stream music and find lyrics directly on my website.';
+
+  // --- URL + metadata sync --------------------------------------------------
+
+  function getSongTitleFromSlide(index) {
+    const slide = window.carousel?.slides?.[index];
+    if (!slide) return null;
+    const titleEl = slide.querySelector('p.has-huge-font-size');
+    return titleEl?.textContent.trim() || null;
+  }
+
+  function getProjectSlugForIndex(index) {
+    for (const [projectSlug, songIndices] of Object.entries(projectMap)) {
+      if (songIndices.includes(index)) return projectSlug;
+    }
+    return null;
+  }
+
+  function buildUrlForSlide(index, { includeProject = false } = {}) {
+    const slug = indexToSlug[index];
+    if (!slug) return window.location.pathname;
+
+    let url = `${window.location.pathname}?song=${slug}`;
+    if (includeProject) {
+      const projectSlug = getProjectSlugForIndex(index);
+      if (projectSlug) url += `&project=${projectSlug}`;
+    }
+    return url;
+  }
+
+  function setMeta(name, value, attr = 'name') {
+    const el = document.querySelector(`meta[${attr}="${name}"]`);
+    if (el) el.setAttribute('content', value);
+  }
+
+  function updateDocumentMetadata(index, canonicalUrl) {
+    const songTitle = getSongTitleFromSlide(index);
+    const title = songTitle ? `${songTitle} – ${SITE_NAME}` : DEFAULT_TITLE;
+    const fullUrl = new URL(canonicalUrl, window.location.origin).href;
+
+    document.title = title;
+    setMeta('og:title', title, 'property');
+    setMeta('og:url', fullUrl, 'property');
+
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) canonicalLink.setAttribute('href', fullUrl);
+  }
+
+  // --- Navigation -----------------------------------------------------------
+
+  function goToSlide(index, { updateUrl = true, pushHistory = true } = {}) {
+    if (!window.carousel?.slideTo) return;
+    window.carousel.slideTo(index);
+
+    if (updateUrl) {
+      const keepProject = getProjectSlugForIndex(index) !== null;
+      const url = buildUrlForSlide(index, { includeProject: keepProject });
+      const method = pushHistory ? 'pushState' : 'replaceState';
+      history[method](null, '', url);
+      updateDocumentMetadata(index, url);
     }
   }
 
@@ -477,12 +540,22 @@
     const projectSlug = params.get('project')?.toLowerCase();
 
     const navigateToSong = () => {
-      if (songSlug && Object.hasOwn(songMap, songSlug)) {
-        goToSlide(songMap[songSlug]);
+      const hasValidSong = songSlug && Object.hasOwn(songMap, songSlug);
+      const targetIndex = hasValidSong ? songMap[songSlug] : 10;
+
+      // Initial load: replaceState (don't pollute history), and only keep
+      // the slug in the URL if the user explicitly provided one.
+      if (hasValidSong) {
+        goToSlide(targetIndex, { updateUrl: false, pushHistory: false });
+        const keepProject = projectSlug && Object.hasOwn(projectMap, projectSlug);
+        const url = buildUrlForSlide(targetIndex, { includeProject: keepProject });
+        history.replaceState(null, '', url);
+        updateDocumentMetadata(targetIndex, url);
       } else {
-        goToSlide(10);
+        goToSlide(targetIndex, { updateUrl: false, pushHistory: false });
+        history.replaceState(null, '', window.location.pathname);
+        updateDocumentMetadata(targetIndex, window.location.pathname);
       }
-      history.replaceState(null, '', window.location.pathname);
     };
 
     if (projectSlug && Object.hasOwn(projectMap, projectSlug)) {
@@ -497,6 +570,22 @@
       navigateToSong();
     }
   }
+
+  // --- Back/forward button handling ----------------------------------------
+
+  window.addEventListener('popstate', () => {
+    const params = new URLSearchParams(window.location.search);
+    const songSlug = params.get('song')?.toLowerCase();
+    const targetIndex = songSlug && Object.hasOwn(songMap, songSlug)
+      ? songMap[songSlug]
+      : 10;
+
+    // Don't re-push history on popstate — the browser already updated the URL.
+    goToSlide(targetIndex, { updateUrl: false, pushHistory: false });
+    updateDocumentMetadata(targetIndex, window.location.pathname + window.location.search);
+  });
+
+  // --- Bootstrap ------------------------------------------------------------
 
   document.addEventListener('DOMContentLoaded', () => {
     const outerContainer = document.querySelector('.wp-block-cb-carousel-v2');
@@ -551,9 +640,11 @@
     }, 100);
   });
 
+  // --- Utilities used by buttons in the HTML -------------------------------
+
   function getCurrentSongSlug() {
     const index = window.carousel?.activeIndex ?? 0;
-    return Object.keys(songMap).find(key => songMap[key] === index);
+    return indexToSlug[index];
   }
 
   function copyLyrics(btn) {
@@ -582,16 +673,8 @@
 
   function copyLink(btn) {
     const index = window.carousel?.activeIndex ?? 0;
-    const songSlug = Object.keys(songMap).find(key => songMap[key] === index) ?? 'punk-girl-shawty';
-    const baseUrl = window.location.origin + window.location.pathname;
-    let shareUrl = `${baseUrl}?song=${songSlug}`;
-
-    for (const [projectSlug, songIndices] of Object.entries(projectMap)) {
-      if (songIndices.includes(index)) {
-        shareUrl += `&project=${projectSlug}`;
-        break;
-      }
-    }
+    const url = buildUrlForSlide(index, { includeProject: true });
+    const shareUrl = window.location.origin + url;
 
     navigator.clipboard.writeText(shareUrl).then(() => {
       const original = btn.innerHTML;
