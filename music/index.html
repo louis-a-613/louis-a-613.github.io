@@ -481,17 +481,31 @@
 
   // --- Navigation -----------------------------------------------------------
 
-  function goToSlide(index, { updateUrl = true, pushHistory = true } = {}) {
+  function applySlideFromUrl(index) {
     if (!window.carousel?.slideTo) return;
     window.carousel.slideTo(index);
 
-    if (updateUrl) {
-      const keepProject = getProjectSlugForIndex(index) !== null;
-      const url = buildUrlForSlide(index, { includeProject: keepProject });
-      const method = pushHistory ? 'pushState' : 'replaceState';
-      history[method](null, '', url);
-      updateDocumentMetadata(index, url);
+    const params = new URLSearchParams(window.location.search);
+    const songSlug = params.get('song')?.toLowerCase();
+    if (songSlug && Object.hasOwn(songMap, songSlug)) {
+      updateDocumentMetadata(index, window.location.pathname + window.location.search);
+    } else {
+      resetDocumentMetadataToDefaults();
     }
+  }
+
+  function goToSlide(index) {
+    if (!window.carousel?.slideTo) return;
+
+    const keepProject = getProjectSlugForIndex(index) !== null;
+    const url = buildUrlForSlide(index, { includeProject: keepProject });
+    const current = window.location.pathname + window.location.search;
+
+    if (current !== url) {
+      history.replaceState({ songIndex: index }, '', url);
+    }
+
+    applySlideFromUrl(index);
   }
 
   function updateCarouselHeight(carousel) {
@@ -572,21 +586,15 @@
       const hasValidSong = songSlug && Object.hasOwn(songMap, songSlug);
       const targetIndex = hasValidSong ? songMap[songSlug] : 10;
 
-      // Initial load: replaceState (don't pollute history), and only keep
-      // the slug in the URL if the user explicitly provided one.
       if (hasValidSong) {
-        goToSlide(targetIndex, { updateUrl: false, pushHistory: false });
         const keepProject = projectSlug && Object.hasOwn(projectMap, projectSlug);
         const url = buildUrlForSlide(targetIndex, { includeProject: keepProject });
-        history.replaceState(null, '', url);
-        updateDocumentMetadata(targetIndex, url);
+        history.replaceState({ songIndex: targetIndex }, '', url);
       } else {
-        // Bare load: keep URL and title generic even though we're showing
-        // the latest song by default. User didn't request it specifically.
-        goToSlide(targetIndex, { updateUrl: false, pushHistory: false });
-        history.replaceState(null, '', window.location.pathname);
-        resetDocumentMetadataToDefaults();
+        history.replaceState({ songIndex: targetIndex }, '', window.location.pathname);
       }
+
+      applySlideFromUrl(targetIndex);
     };
 
     if (projectSlug && Object.hasOwn(projectMap, projectSlug)) {
@@ -602,23 +610,6 @@
     }
   }
 
-  // --- Back/forward button handling ----------------------------------------
-
-  window.addEventListener('popstate', () => {
-    const params = new URLSearchParams(window.location.search);
-    const songSlug = params.get('song')?.toLowerCase();
-    const hasValidSong = songSlug && Object.hasOwn(songMap, songSlug);
-    const targetIndex = hasValidSong ? songMap[songSlug] : 10;
-
-    // Don't re-push history on popstate — the browser already updated the URL.
-    goToSlide(targetIndex, { updateUrl: false, pushHistory: false });
-
-    if (hasValidSong) {
-      updateDocumentMetadata(targetIndex, window.location.pathname + window.location.search);
-    } else {
-      resetDocumentMetadataToDefaults();
-    }
-  });
 
   // --- Bootstrap ------------------------------------------------------------
 
@@ -634,14 +625,9 @@
         discographyPanel.classList.toggle('is-overflowing', isOverflowing);
       };
 
-      // Watch for content size changes (accordion expand/collapse)
       const contentObserver = new ResizeObserver(updateOverflowState);
       contentObserver.observe(discographyPanel);
-
-      // Also react to viewport resize (70vh changes as window resizes)
       window.addEventListener('resize', updateOverflowState);
-
-      // Initial check
       updateOverflowState();
     }
 
