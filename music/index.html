@@ -494,6 +494,14 @@
     }
   }
 
+  const HISTORY_TAG = 'loui-song';
+
+  let _keyCounter = 0;
+  function nextHistoryKey() {
+    _keyCounter += 1;
+    return Date.now() + ':' + _keyCounter;
+  }
+
   function goToSlide(index) {
     if (!window.carousel?.slideTo) return;
 
@@ -502,11 +510,22 @@
     const current = window.location.pathname + window.location.search;
 
     if (current !== url) {
-      history.replaceState({ songIndex: index }, '', url);
+      history.pushState(
+        { type: HISTORY_TAG, songIndex: index, key: nextHistoryKey() },
+        '',
+        url,
+      );
     }
 
     applySlideFromUrl(index);
   }
+
+  window.addEventListener('popstate', (e) => {
+    const state = e.state;
+    if (state && state.type === HISTORY_TAG && typeof state.songIndex === 'number') {
+      applySlideFromUrl(state.songIndex);
+    }
+  });
 
   function updateCarouselHeight(carousel) {
     if (!carousel) return;
@@ -524,10 +543,36 @@
     });
   }
 
-  function pauseSlideEmbeds(slide) {
+  function unloadSlideEmbeds(slide) {
     if (!slide) return;
     slide.querySelectorAll('iframe').forEach(iframe => {
-      iframe.src = iframe.src;
+      const attrSrc = iframe.getAttribute('src');
+      if (attrSrc && attrSrc !== 'about:blank' && !iframe.dataset.src) {
+        iframe.dataset.src = attrSrc;
+      }
+      try {
+        if (iframe.contentWindow) {
+          iframe.contentWindow.location.replace('about:blank');
+        }
+      } catch (e) {
+        iframe.removeAttribute('src');
+      }
+    });
+  }
+
+  function loadSlideEmbeds(slide) {
+    if (!slide) return;
+    slide.querySelectorAll('iframe[data-src]').forEach(iframe => {
+      const desired = iframe.dataset.src;
+      try {
+        if (iframe.contentWindow) {
+          iframe.contentWindow.location.replace(desired);
+          return;
+        }
+      } catch (e) {
+        // fall through
+      }
+      iframe.setAttribute('src', desired);
     });
   }
 
@@ -586,12 +631,17 @@
       const hasValidSong = songSlug && Object.hasOwn(songMap, songSlug);
       const targetIndex = hasValidSong ? songMap[songSlug] : 10;
 
+      const initialState = {
+        type: HISTORY_TAG,
+        songIndex: targetIndex,
+        key: nextHistoryKey(),
+      };
       if (hasValidSong) {
         const keepProject = projectSlug && Object.hasOwn(projectMap, projectSlug);
         const url = buildUrlForSlide(targetIndex, { includeProject: keepProject });
-        history.replaceState({ songIndex: targetIndex }, '', url);
+        history.replaceState(initialState, '', url);
       } else {
-        history.replaceState({ songIndex: targetIndex }, '', window.location.pathname);
+        history.replaceState(initialState, '', window.location.pathname);
       }
 
       applySlideFromUrl(targetIndex);
@@ -609,7 +659,6 @@
       navigateToSong();
     }
   }
-
 
   // --- Bootstrap ------------------------------------------------------------
 
@@ -659,17 +708,22 @@
         });
 
         window.carousel.update();
-        handleUrlParams();
 
-        setTimeout(() => updateCarouselHeight(window.carousel), 100);
+        window.carousel.slides.forEach(slide => unloadSlideEmbeds(slide));
 
         window.carousel.on('slideChange', () => {
           const prev = window.carousel.slides[window.carousel.previousIndex];
           const curr = window.carousel.slides[window.carousel.activeIndex];
-          if (prev && prev !== curr) pauseSlideEmbeds(prev);
+          if (curr) loadSlideEmbeds(curr);
+          if (prev && prev !== curr) unloadSlideEmbeds(prev);
           updateCarouselHeight(window.carousel);
         });
         window.carousel.on('slideChangeTransitionEnd', () => updateCarouselHeight(window.carousel));
+
+        handleUrlParams();
+        loadSlideEmbeds(window.carousel.slides[window.carousel.activeIndex]);
+
+        setTimeout(() => updateCarouselHeight(window.carousel), 100);
 
         let resizeTimeout;
         window.addEventListener('resize', () => {
