@@ -570,13 +570,10 @@
       if (attrSrc && attrSrc !== 'about:blank' && !iframe.dataset.src) {
         iframe.dataset.src = attrSrc;
       }
-      try {
-        if (iframe.contentWindow) {
-          iframe.contentWindow.location.replace('about:blank');
-        }
-      } catch (e) {
-        iframe.removeAttribute('src');
-      }
+      if (!iframe.parentNode) return;
+      const clone = iframe.cloneNode(false);
+      clone.removeAttribute('src');
+      iframe.parentNode.replaceChild(clone, iframe);
     });
   }
 
@@ -584,15 +581,10 @@
     if (!slide) return;
     slide.querySelectorAll('iframe[data-src]').forEach(iframe => {
       const desired = iframe.dataset.src;
-      try {
-        if (iframe.contentWindow) {
-          iframe.contentWindow.location.replace(desired);
-          return;
-        }
-      } catch (e) {
-        // fall through
-      }
-      iframe.setAttribute('src', desired);
+      if (!desired || !iframe.parentNode) return;
+      const clone = iframe.cloneNode(false);
+      clone.setAttribute('src', desired);
+      iframe.parentNode.replaceChild(clone, iframe);
     });
   }
 
