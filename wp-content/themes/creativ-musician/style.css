@@ -540,10 +540,7 @@ button:active,
 input[type="button"]:active,
 input[type="reset"]:active,
 input[type="submit"]:active {
-    border-color: #fff;
-    background-color: #fff;
-    color: #ff0078;
-    outline: thin dotted;
+    outline: none;
 }
 
 input[type="text"],
