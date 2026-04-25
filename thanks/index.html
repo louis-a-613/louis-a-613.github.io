@@ -116,6 +116,9 @@ body.custom-background { background-color: #0a0a0a; }
 	.site-content {
         padding-top: 80px !important;
     }
+    .main-navigation.toggled ul.nav-menu {
+        display: block;
+    }
     .main-navigation ul.nav-menu > li:last-child > a {
         padding: 16.5px 22px !important;
         border-radius: 0px !important;
@@ -129,6 +132,9 @@ body.custom-background { background-color: #0a0a0a; }
 @media (max-width: 480px) {
 	.site-content {
         padding-top: 190px !important;
+    }
+    .main-navigation.toggled ul.nav-menu {
+        display: block;
     }
     .main-navigation ul.nav-menu > li:last-child > a {
         padding: 16.5px 22px !important;
@@ -260,5 +266,7 @@ a:focus {
 		<script type="speculationrules">
 {"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/creativ-musician/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
 </script>
+<script type="text/javascript" src="/wp-content/themes/creativ-musician/assets/js/navigation.min.js?ver=20151215" id="creativ-musician-navigation-js"></script>
+
 </div></body>  
 </html>
