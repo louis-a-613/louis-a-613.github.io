@@ -8,7 +8,7 @@
   </url>
   <url>
     <loc>https://louis-a.com/music/</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-04-26</lastmod>
     <priority>0.8</priority>
     <video:video>
       <video:thumbnail_loc>https://i.ytimg.com/vi/qSVwKDG3Bvc/hqdefault.jpg</video:thumbnail_loc>
@@ -25,12 +25,12 @@
   </url>
   <url>
     <loc>https://louis-a.com/about-me/</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-04-26</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://louis-a.com/connect/</loc>
-    <lastmod>2026-04-25</lastmod>
+    <lastmod>2026-04-26</lastmod>
     <priority>0.6</priority>
   </url>
 </urlset>
