@@ -414,429 +414,6 @@
 }
 </script>
 
-<script>
-  const projectMap = {
-    'off-the-rip': [0, 1, 2, 3, 4]
-  };
-
-  const songMap = {
-    'fit-check': 0,
-    'runnaway-freestyle': 1,
-    'wanna-go-home': 2,
-    'sober': 3,
-    'chainz-bigger': 4,
-    'dirty-sprite': 5,
-    'fake-love': 6,
-    'xoxo': 7,
-    'antidote': 8,
-    'fantasy': 9,
-    'punk-girl-shawty': 10,
-    'imprint': 11
-  };
-
-  const indexToSlug = Object.fromEntries(
-    Object.entries(songMap).map(([slug, idx]) => [idx, slug])
-  );
-
-  const SITE_NAME = 'Louis Λ';
-  const DEFAULT_TITLE = 'Music – Louis Λ';
-  const DEFAULT_DESCRIPTION = 'Louis Λ (Louis A): Stream music and find lyrics directly on my website.';
-
-  // --- URL + metadata sync --------------------------------------------------
-
-  function getSongTitleFromSlide(index) {
-    const slide = window.carousel?.slides?.[index];
-    if (!slide) return null;
-    const titleEl = slide.querySelector('p.has-huge-font-size');
-    return titleEl?.textContent.trim() || null;
-  }
-
-  function getProjectSlugForIndex(index) {
-    for (const [projectSlug, songIndices] of Object.entries(projectMap)) {
-      if (songIndices.includes(index)) return projectSlug;
-    }
-    return null;
-  }
-
-  function buildUrlForSlide(index, { includeProject = false } = {}) {
-    const slug = indexToSlug[index];
-    if (!slug) return window.location.pathname;
-
-    let url = `${window.location.pathname}?song=${slug}`;
-    if (includeProject) {
-      const projectSlug = getProjectSlugForIndex(index);
-      if (projectSlug) url += `&project=${projectSlug}`;
-    }
-    return url;
-  }
-
-  function setMeta(name, value, attr = 'name') {
-    const el = document.querySelector(`meta[${attr}="${name}"]`);
-    if (el) el.setAttribute('content', value);
-  }
-
-  function updateDocumentMetadata(index, canonicalUrl) {
-    const songTitle = getSongTitleFromSlide(index);
-    const title = songTitle ? `${songTitle} – ${SITE_NAME}` : DEFAULT_TITLE;
-    const fullUrl = new URL(canonicalUrl, window.location.origin).href;
-
-    document.title = title;
-    setMeta('og:title', title, 'property');
-    setMeta('og:url', fullUrl, 'property');
-
-    const canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (canonicalLink) canonicalLink.setAttribute('href', fullUrl);
-  }
-
-  function resetDocumentMetadataToDefaults() {
-    const bareUrl = window.location.origin + window.location.pathname;
-
-    document.title = DEFAULT_TITLE;
-    setMeta('og:title', DEFAULT_TITLE, 'property');
-    setMeta('og:url', bareUrl, 'property');
-
-    const canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (canonicalLink) canonicalLink.setAttribute('href', bareUrl);
-  }
-
-  // --- Navigation -----------------------------------------------------------
-
-  function applySlideFromUrl(index) {
-    if (!window.carousel?.slideTo) return;
-    window.carousel.slideTo(index);
-
-    const params = new URLSearchParams(window.location.search);
-    const songSlug = params.get('song')?.toLowerCase();
-    if (songSlug && Object.hasOwn(songMap, songSlug)) {
-      updateDocumentMetadata(index, window.location.pathname + window.location.search);
-    } else {
-      resetDocumentMetadataToDefaults();
-    }
-  }
-
-  const HISTORY_TAG = 'loui-song';
-
-  let _keyCounter = 0;
-  function nextHistoryKey() {
-    _keyCounter += 1;
-    return Date.now() + ':' + _keyCounter;
-  }
-
-  function goToSlide(index) {
-    if (!window.carousel?.slideTo) return;
-
-    const keepProject = getProjectSlugForIndex(index) !== null;
-    const url = buildUrlForSlide(index, { includeProject: keepProject });
-    const current = window.location.pathname + window.location.search;
-
-    if (current !== url) {
-      history.pushState(
-        { type: HISTORY_TAG, songIndex: index, key: nextHistoryKey() },
-        '',
-        url,
-      );
-    }
-
-    applySlideFromUrl(index);
-  }
-
-  window.addEventListener('popstate', (e) => {
-    const state = e.state;
-    if (state && state.type === HISTORY_TAG && typeof state.songIndex === 'number') {
-      applySlideFromUrl(state.songIndex);
-    }
-  });
-
-  function updateCarouselHeight(carousel) {
-    if (!carousel) return;
-    const activeSlide = carousel.slides[carousel.activeIndex];
-    if (!activeSlide) return;
-    requestAnimationFrame(() => {
-      const anchor = activeSlide.querySelector(`#lyrics-end-${carousel.activeIndex}`);
-      const height = anchor
-        ? anchor.offsetTop + anchor.offsetHeight + 20
-        : activeSlide.scrollHeight;
-      carousel.el.style.height = `${height}px`;
-      carousel.el.style.overflowY = 'hidden';
-      carousel.update();
-      if (carousel.updateAutoHeight) carousel.updateAutoHeight();
-    });
-  }
-
-  // --- Embed lazy-loading ---------------------------------------------------
-  const EMBED_BUILDERS = {
-    soundcloud({ url, title }) {
-      const iframe = document.createElement('iframe');
-      if (title) iframe.title = title;
-      iframe.width = '640';
-      iframe.height = '400';
-      iframe.scrolling = 'no';
-      iframe.setAttribute('frameborder', 'no');
-      iframe.src = url;
-      return iframe;
-    },
-    youtube({ url, title }) {
-      const iframe = document.createElement('iframe');
-      if (title) iframe.title = title;
-      iframe.width = '640';
-      iframe.height = '400';
-      iframe.setAttribute('frameborder', '0');
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-      iframe.allowFullscreen = true;
-      iframe.src = url;
-      return iframe;
-    },
-    spotify({ url, title }) {
-      const iframe = document.createElement('iframe');
-      if (title) iframe.title = title;
-      iframe.style.borderRadius = '12px';
-      iframe.width = '100%';
-      iframe.height = '152';
-      iframe.setAttribute('frameborder', '0');
-      iframe.allowFullscreen = true;
-      iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
-      iframe.src = url;
-      return iframe;
-    },
-  };
-
-  function loadSlideEmbeds(slide) {
-    if (!slide) return;
-    slide.querySelectorAll('.embed-placeholder').forEach(placeholder => {
-      const type = placeholder.dataset.embedType;
-      const url = placeholder.dataset.embedUrl;
-      const title = placeholder.dataset.title || '';
-      const build = EMBED_BUILDERS[type];
-      if (!build || !url || !placeholder.parentNode) return;
-
-      const iframe = build({ url, title });
-      iframe.dataset.embedType = type;
-      iframe.dataset.embedUrl = url;
-      if (title) iframe.dataset.title = title;
-
-      placeholder.replaceWith(iframe);
-    });
-  }
-
-  function unloadSlideEmbeds(slide) {
-    if (!slide) return;
-    slide.querySelectorAll('iframe[data-embed-type]').forEach(iframe => {
-      if (!iframe.parentNode) return;
-      const placeholder = document.createElement('div');
-      placeholder.className = 'embed-placeholder';
-      placeholder.dataset.embedType = iframe.dataset.embedType;
-      placeholder.dataset.embedUrl = iframe.dataset.embedUrl;
-      if (iframe.dataset.title) placeholder.dataset.title = iframe.dataset.title;
-      iframe.replaceWith(placeholder);
-    });
-  }
-
-  function openAccordionChain(buttons, onComplete) {
-    if (!buttons.length) {
-      if (onComplete) onComplete();
-      return;
-    }
-
-    const [btn, ...rest] = buttons;
-
-    if (btn.getAttribute('aria-expanded') === 'true') {
-      openAccordionChain(rest, onComplete);
-      return;
-    }
-
-    const panelId = btn.getAttribute('aria-controls');
-    const panel = panelId ? document.getElementById(panelId) : null;
-
-    if (!panel) {
-      btn.click();
-      requestAnimationFrame(() => openAccordionChain(rest, onComplete));
-      return;
-    }
-
-    let settled = false;
-
-    const observer = new MutationObserver(() => {
-      if (!panel.hasAttribute('inert') && !settled) {
-        settled = true;
-        observer.disconnect();
-        clearTimeout(safetyTimer);
-        openAccordionChain(rest, onComplete);
-      }
-    });
-
-    observer.observe(panel, { attributes: true, attributeFilter: ['inert'] });
-
-    const safetyTimer = setTimeout(() => {
-      if (!settled) {
-        settled = true;
-        observer.disconnect();
-        openAccordionChain(rest, onComplete);
-      }
-    }, 2000);
-
-    btn.click();
-  }
-
-  function handleUrlParams() {
-    const params = new URLSearchParams(window.location.search);
-    const songSlug = params.get('song')?.toLowerCase();
-    const projectSlug = params.get('project')?.toLowerCase();
-
-    const navigateToSong = () => {
-      const hasValidSong = songSlug && Object.hasOwn(songMap, songSlug);
-      const targetIndex = hasValidSong ? songMap[songSlug] : 11;
-
-      const initialState = {
-        type: HISTORY_TAG,
-        songIndex: targetIndex,
-        key: nextHistoryKey(),
-      };
-      if (hasValidSong) {
-        const keepProject = projectSlug && Object.hasOwn(projectMap, projectSlug);
-        const url = buildUrlForSlide(targetIndex, { includeProject: keepProject });
-        history.replaceState(initialState, '', url);
-      } else {
-        history.replaceState(initialState, '', window.location.pathname);
-      }
-
-      applySlideFromUrl(targetIndex);
-    };
-
-    if (projectSlug && Object.hasOwn(projectMap, projectSlug)) {
-      const buttons = [
-        document.querySelector('.discography button[aria-expanded]'),
-        document.querySelector('.projects button[aria-expanded]'),
-        document.querySelector(`.${projectSlug} button[aria-expanded]`),
-      ].filter(Boolean);
-
-      openAccordionChain(buttons, navigateToSong);
-    } else {
-      navigateToSong();
-    }
-  }
-
-  // --- Bootstrap ------------------------------------------------------------
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const outerContainer = document.querySelector('.wp-block-cb-carousel-v2');
-    let attempts = 0;
-    const maxAttempts = 20;
-
-    const discographyPanel = document.getElementById('accordion-item-6-panel');
-    if (discographyPanel) {
-      const updateOverflowState = () => {
-        const isOverflowing = discographyPanel.scrollHeight > discographyPanel.clientHeight + 1;
-        discographyPanel.classList.toggle('is-overflowing', isOverflowing);
-      };
-
-      const contentObserver = new ResizeObserver(updateOverflowState);
-      contentObserver.observe(discographyPanel);
-      window.addEventListener('resize', updateOverflowState);
-      updateOverflowState();
-    }
-
-    const pollForSwiper = setInterval(() => {
-      const swiperEl = outerContainer?.querySelector('.swiper');
-      window.carousel = swiperEl?.swiper ?? null;
-
-      if (window.carousel) {
-        window.carousel.allowTouchMove = false;
-        window.carousel.allowSlideNext = false;
-        window.carousel.allowSlidePrev = false;
-        window.carousel.params.allowTouchMove = false;
-        window.carousel.params.simulateTouch = false;
-        window.carousel.params.touchRatio = 0;
-        window.carousel.params.touchAngle = 0;
-        window.carousel.params.shortSwipes = false;
-        window.carousel.params.longSwipes = false;
-
-        const swiperContainer = window.carousel.el;
-        ['touchstart', 'touchmove', 'touchend', 'mousedown', 'mousemove', 'mouseup'].forEach(eventType => {
-          swiperContainer.addEventListener(eventType, (e) => {
-            const target = e.target;
-            const isInteractive = target.tagName === 'IFRAME' ||
-                                  target.closest('iframe') ||
-                                  target.tagName === 'A' ||
-                                  target.closest('a');
-            if (!isInteractive) e.stopImmediatePropagation();
-          }, true);
-        });
-
-        window.carousel.update();
-
-        window.carousel.on('slideChange', () => {
-          const prev = window.carousel.slides[window.carousel.previousIndex];
-          const curr = window.carousel.slides[window.carousel.activeIndex];
-          if (curr) loadSlideEmbeds(curr);
-          if (prev && prev !== curr) unloadSlideEmbeds(prev);
-          updateCarouselHeight(window.carousel);
-        });
-        window.carousel.on('slideChangeTransitionEnd', () => updateCarouselHeight(window.carousel));
-
-        handleUrlParams();
-        loadSlideEmbeds(window.carousel.slides[window.carousel.activeIndex]);
-
-        setTimeout(() => updateCarouselHeight(window.carousel), 100);
-
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-          clearTimeout(resizeTimeout);
-          resizeTimeout = setTimeout(() => updateCarouselHeight(window.carousel), 150);
-        });
-
-        clearInterval(pollForSwiper);
-      } else if (++attempts >= maxAttempts) {
-        clearInterval(pollForSwiper);
-      }
-    }, 100);
-  });
-
-  // --- Utilities used by buttons in the HTML -------------------------------
-
-  function getCurrentSongSlug() {
-    const index = window.carousel?.activeIndex ?? 0;
-    return indexToSlug[index];
-  }
-
-  function copyLyrics(btn) {
-    if (!window.carousel) return;
-    const slide = window.carousel.slides[window.carousel.activeIndex];
-    if (!slide) return;
-
-    const lyricsText = Array.from(
-      slide.querySelectorAll('p.has-text-align-center:not(.has-huge-font-size)')
-    )
-      .map(p => p.innerText.trim())
-      .filter(text => text.length > 0)
-      .join('\n\n');
-
-    navigator.clipboard.writeText(lyricsText).then(() => {
-      const original = btn.innerHTML;
-      btn.innerHTML = '✅ Lyrics Copied!';
-      btn.style.pointerEvents = 'none';
-      setTimeout(() => { btn.innerHTML = original; btn.style.pointerEvents = 'auto'; }, 2500);
-    }).catch(() => {
-      const original = btn.innerHTML;
-      btn.innerHTML = '❌ Try again';
-      setTimeout(() => { btn.innerHTML = original; }, 2000);
-    });
-  }
-
-  function copyLink(btn) {
-    const index = window.carousel?.activeIndex ?? 0;
-    const url = buildUrlForSlide(index, { includeProject: true });
-    const shareUrl = window.location.origin + url;
-
-    navigator.clipboard.writeText(shareUrl).then(() => {
-      const original = btn.innerHTML;
-      btn.innerHTML = '🔗 Link Copied!';
-      btn.style.pointerEvents = 'none';
-      setTimeout(() => { btn.innerHTML = original; btn.style.pointerEvents = 'auto'; }, 2500);
-    });
-  }
-</script>
-
 <meta name="robots" content="max-image-preview:large">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2238,5 +1815,430 @@ body.custom-background { background-color: #0a0a0a; }
 <script type="text/javascript" src="/wp-content/plugins/carousel-block/build/carousel/view.js?ver=fc7404a34f7531376b4e" id="cb-carousel-v2-view-script-js" defer="defer" data-wp-strategy="defer"></script>
 <script type="text/javascript" src="/wp-content/themes/creativ-musician/assets/js/navigation.min.js?ver=20151215" id="creativ-musician-navigation-js"></script>
 
-</div></body>  
+</div>
+
+<script>
+  const projectMap = {
+    'off-the-rip': [0, 1, 2, 3, 4]
+  };
+
+  const songMap = {
+    'fit-check': 0,
+    'runnaway-freestyle': 1,
+    'wanna-go-home': 2,
+    'sober': 3,
+    'chainz-bigger': 4,
+    'dirty-sprite': 5,
+    'fake-love': 6,
+    'xoxo': 7,
+    'antidote': 8,
+    'fantasy': 9,
+    'punk-girl-shawty': 10,
+    'imprint': 11
+  };
+
+  const indexToSlug = Object.fromEntries(
+    Object.entries(songMap).map(([slug, idx]) => [idx, slug])
+  );
+
+  const SITE_NAME = 'Louis Λ';
+  const DEFAULT_TITLE = 'Music – Louis Λ';
+  const DEFAULT_DESCRIPTION = 'Louis Λ (Louis A): Stream music and find lyrics directly on my website.';
+
+  // --- URL + metadata sync --------------------------------------------------
+
+  function getSongTitleFromSlide(index) {
+    const slide = window.carousel?.slides?.[index];
+    if (!slide) return null;
+    const titleEl = slide.querySelector('p.has-huge-font-size');
+    return titleEl?.textContent.trim() || null;
+  }
+
+  function getProjectSlugForIndex(index) {
+    for (const [projectSlug, songIndices] of Object.entries(projectMap)) {
+      if (songIndices.includes(index)) return projectSlug;
+    }
+    return null;
+  }
+
+  function buildUrlForSlide(index, { includeProject = false } = {}) {
+    const slug = indexToSlug[index];
+    if (!slug) return window.location.pathname;
+
+    let url = `${window.location.pathname}?song=${slug}`;
+    if (includeProject) {
+      const projectSlug = getProjectSlugForIndex(index);
+      if (projectSlug) url += `&project=${projectSlug}`;
+    }
+    return url;
+  }
+
+  function setMeta(name, value, attr = 'name') {
+    const el = document.querySelector(`meta[${attr}="${name}"]`);
+    if (el) el.setAttribute('content', value);
+  }
+
+  function updateDocumentMetadata(index, canonicalUrl) {
+    const songTitle = getSongTitleFromSlide(index);
+    const title = songTitle ? `${songTitle} – ${SITE_NAME}` : DEFAULT_TITLE;
+    const fullUrl = new URL(canonicalUrl, window.location.origin).href;
+
+    document.title = title;
+    setMeta('og:title', title, 'property');
+    setMeta('og:url', fullUrl, 'property');
+
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) canonicalLink.setAttribute('href', fullUrl);
+  }
+
+  function resetDocumentMetadataToDefaults() {
+    const bareUrl = window.location.origin + window.location.pathname;
+
+    document.title = DEFAULT_TITLE;
+    setMeta('og:title', DEFAULT_TITLE, 'property');
+    setMeta('og:url', bareUrl, 'property');
+
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) canonicalLink.setAttribute('href', bareUrl);
+  }
+
+  // --- Navigation -----------------------------------------------------------
+
+  function applySlideFromUrl(index) {
+    if (!window.carousel?.slideTo) return;
+    window.carousel.slideTo(index);
+
+    const params = new URLSearchParams(window.location.search);
+    const songSlug = params.get('song')?.toLowerCase();
+    if (songSlug && Object.hasOwn(songMap, songSlug)) {
+      updateDocumentMetadata(index, window.location.pathname + window.location.search);
+    } else {
+      resetDocumentMetadataToDefaults();
+    }
+  }
+
+  const HISTORY_TAG = 'loui-song';
+
+  let _keyCounter = 0;
+  function nextHistoryKey() {
+    _keyCounter += 1;
+    return Date.now() + ':' + _keyCounter;
+  }
+
+  function goToSlide(index) {
+    if (!window.carousel?.slideTo) return;
+
+    const keepProject = getProjectSlugForIndex(index) !== null;
+    const url = buildUrlForSlide(index, { includeProject: keepProject });
+    const current = window.location.pathname + window.location.search;
+
+    if (current !== url) {
+      history.pushState(
+        { type: HISTORY_TAG, songIndex: index, key: nextHistoryKey() },
+        '',
+        url,
+      );
+    }
+
+    applySlideFromUrl(index);
+  }
+
+  window.addEventListener('popstate', (e) => {
+    const state = e.state;
+    if (state && state.type === HISTORY_TAG && typeof state.songIndex === 'number') {
+      applySlideFromUrl(state.songIndex);
+    }
+  });
+
+  function updateCarouselHeight(carousel) {
+    if (!carousel) return;
+    const activeSlide = carousel.slides[carousel.activeIndex];
+    if (!activeSlide) return;
+    requestAnimationFrame(() => {
+      const anchor = activeSlide.querySelector(`#lyrics-end-${carousel.activeIndex}`);
+      const height = anchor
+        ? anchor.offsetTop + anchor.offsetHeight + 20
+        : activeSlide.scrollHeight;
+      carousel.el.style.height = `${height}px`;
+      carousel.el.style.overflowY = 'hidden';
+      carousel.update();
+      if (carousel.updateAutoHeight) carousel.updateAutoHeight();
+    });
+  }
+
+  // --- Embed lazy-loading ---------------------------------------------------
+  const EMBED_BUILDERS = {
+    soundcloud({ url, title }) {
+      const iframe = document.createElement('iframe');
+      if (title) iframe.title = title;
+      iframe.width = '640';
+      iframe.height = '400';
+      iframe.scrolling = 'no';
+      iframe.setAttribute('frameborder', 'no');
+      iframe.src = url;
+      return iframe;
+    },
+    youtube({ url, title }) {
+      const iframe = document.createElement('iframe');
+      if (title) iframe.title = title;
+      iframe.width = '640';
+      iframe.height = '400';
+      iframe.setAttribute('frameborder', '0');
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allowFullscreen = true;
+      iframe.src = url;
+      return iframe;
+    },
+    spotify({ url, title }) {
+      const iframe = document.createElement('iframe');
+      if (title) iframe.title = title;
+      iframe.style.borderRadius = '12px';
+      iframe.width = '100%';
+      iframe.height = '152';
+      iframe.setAttribute('frameborder', '0');
+      iframe.allowFullscreen = true;
+      iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+      iframe.src = url;
+      return iframe;
+    },
+  };
+
+  function loadSlideEmbeds(slide) {
+    if (!slide) return;
+    slide.querySelectorAll('.embed-placeholder').forEach(placeholder => {
+      const type = placeholder.dataset.embedType;
+      const url = placeholder.dataset.embedUrl;
+      const title = placeholder.dataset.title || '';
+      const build = EMBED_BUILDERS[type];
+      if (!build || !url || !placeholder.parentNode) return;
+
+      const iframe = build({ url, title });
+      iframe.dataset.embedType = type;
+      iframe.dataset.embedUrl = url;
+      if (title) iframe.dataset.title = title;
+
+      placeholder.replaceWith(iframe);
+    });
+  }
+
+  function unloadSlideEmbeds(slide) {
+    if (!slide) return;
+    slide.querySelectorAll('iframe[data-embed-type]').forEach(iframe => {
+      if (!iframe.parentNode) return;
+      const placeholder = document.createElement('div');
+      placeholder.className = 'embed-placeholder';
+      placeholder.dataset.embedType = iframe.dataset.embedType;
+      placeholder.dataset.embedUrl = iframe.dataset.embedUrl;
+      if (iframe.dataset.title) placeholder.dataset.title = iframe.dataset.title;
+      iframe.replaceWith(placeholder);
+    });
+  }
+
+  function openAccordionChain(buttons, onComplete) {
+    if (!buttons.length) {
+      if (onComplete) onComplete();
+      return;
+    }
+
+    const [btn, ...rest] = buttons;
+
+    if (btn.getAttribute('aria-expanded') === 'true') {
+      openAccordionChain(rest, onComplete);
+      return;
+    }
+
+    const panelId = btn.getAttribute('aria-controls');
+    const panel = panelId ? document.getElementById(panelId) : null;
+
+    if (!panel) {
+      btn.click();
+      requestAnimationFrame(() => openAccordionChain(rest, onComplete));
+      return;
+    }
+
+    let settled = false;
+
+    const observer = new MutationObserver(() => {
+      if (!panel.hasAttribute('inert') && !settled) {
+        settled = true;
+        observer.disconnect();
+        clearTimeout(safetyTimer);
+        openAccordionChain(rest, onComplete);
+      }
+    });
+
+    observer.observe(panel, { attributes: true, attributeFilter: ['inert'] });
+
+    const safetyTimer = setTimeout(() => {
+      if (!settled) {
+        settled = true;
+        observer.disconnect();
+        openAccordionChain(rest, onComplete);
+      }
+    }, 2000);
+
+    btn.click();
+  }
+
+  function handleUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    const songSlug = params.get('song')?.toLowerCase();
+    const projectSlug = params.get('project')?.toLowerCase();
+
+    const navigateToSong = () => {
+      const hasValidSong = songSlug && Object.hasOwn(songMap, songSlug);
+      const targetIndex = hasValidSong ? songMap[songSlug] : 11;
+
+      const initialState = {
+        type: HISTORY_TAG,
+        songIndex: targetIndex,
+        key: nextHistoryKey(),
+      };
+      if (hasValidSong) {
+        const keepProject = projectSlug && Object.hasOwn(projectMap, projectSlug);
+        const url = buildUrlForSlide(targetIndex, { includeProject: keepProject });
+        history.replaceState(initialState, '', url);
+      } else {
+        history.replaceState(initialState, '', window.location.pathname);
+      }
+
+      applySlideFromUrl(targetIndex);
+    };
+
+    if (projectSlug && Object.hasOwn(projectMap, projectSlug)) {
+      const buttons = [
+        document.querySelector('.discography button[aria-expanded]'),
+        document.querySelector('.projects button[aria-expanded]'),
+        document.querySelector(`.${projectSlug} button[aria-expanded]`),
+      ].filter(Boolean);
+
+      openAccordionChain(buttons, navigateToSong);
+    } else {
+      navigateToSong();
+    }
+  }
+
+  // --- Bootstrap ------------------------------------------------------------
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const outerContainer = document.querySelector('.wp-block-cb-carousel-v2');
+    let attempts = 0;
+    const maxAttempts = 20;
+
+    const discographyPanel = document.getElementById('accordion-item-6-panel');
+    if (discographyPanel) {
+      const updateOverflowState = () => {
+        const isOverflowing = discographyPanel.scrollHeight > discographyPanel.clientHeight + 1;
+        discographyPanel.classList.toggle('is-overflowing', isOverflowing);
+      };
+
+      const contentObserver = new ResizeObserver(updateOverflowState);
+      contentObserver.observe(discographyPanel);
+      window.addEventListener('resize', updateOverflowState);
+      updateOverflowState();
+    }
+
+    const pollForSwiper = setInterval(() => {
+      const swiperEl = outerContainer?.querySelector('.swiper');
+      window.carousel = swiperEl?.swiper ?? null;
+
+      if (window.carousel) {
+        window.carousel.allowTouchMove = false;
+        window.carousel.allowSlideNext = false;
+        window.carousel.allowSlidePrev = false;
+        window.carousel.params.allowTouchMove = false;
+        window.carousel.params.simulateTouch = false;
+        window.carousel.params.touchRatio = 0;
+        window.carousel.params.touchAngle = 0;
+        window.carousel.params.shortSwipes = false;
+        window.carousel.params.longSwipes = false;
+
+        const swiperContainer = window.carousel.el;
+        ['touchstart', 'touchmove', 'touchend', 'mousedown', 'mousemove', 'mouseup'].forEach(eventType => {
+          swiperContainer.addEventListener(eventType, (e) => {
+            const target = e.target;
+            const isInteractive = target.tagName === 'IFRAME' ||
+                                  target.closest('iframe') ||
+                                  target.tagName === 'A' ||
+                                  target.closest('a');
+            if (!isInteractive) e.stopImmediatePropagation();
+          }, true);
+        });
+
+        window.carousel.update();
+
+        window.carousel.on('slideChange', () => {
+          const prev = window.carousel.slides[window.carousel.previousIndex];
+          const curr = window.carousel.slides[window.carousel.activeIndex];
+          if (curr) loadSlideEmbeds(curr);
+          if (prev && prev !== curr) unloadSlideEmbeds(prev);
+          updateCarouselHeight(window.carousel);
+        });
+        window.carousel.on('slideChangeTransitionEnd', () => updateCarouselHeight(window.carousel));
+
+        handleUrlParams();
+        loadSlideEmbeds(window.carousel.slides[window.carousel.activeIndex]);
+
+        setTimeout(() => updateCarouselHeight(window.carousel), 100);
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => updateCarouselHeight(window.carousel), 150);
+        });
+
+        clearInterval(pollForSwiper);
+      } else if (++attempts >= maxAttempts) {
+        clearInterval(pollForSwiper);
+      }
+    }, 100);
+  });
+
+  // --- Utilities used by buttons in the HTML -------------------------------
+
+  function getCurrentSongSlug() {
+    const index = window.carousel?.activeIndex ?? 0;
+    return indexToSlug[index];
+  }
+
+  function copyLyrics(btn) {
+    if (!window.carousel) return;
+    const slide = window.carousel.slides[window.carousel.activeIndex];
+    if (!slide) return;
+
+    const lyricsText = Array.from(
+      slide.querySelectorAll('p.has-text-align-center:not(.has-huge-font-size)')
+    )
+      .map(p => p.innerText.trim())
+      .filter(text => text.length > 0)
+      .join('\n\n');
+
+    navigator.clipboard.writeText(lyricsText).then(() => {
+      const original = btn.innerHTML;
+      btn.innerHTML = '✅ Lyrics Copied!';
+      btn.style.pointerEvents = 'none';
+      setTimeout(() => { btn.innerHTML = original; btn.style.pointerEvents = 'auto'; }, 2500);
+    }).catch(() => {
+      const original = btn.innerHTML;
+      btn.innerHTML = '❌ Try again';
+      setTimeout(() => { btn.innerHTML = original; }, 2000);
+    });
+  }
+
+  function copyLink(btn) {
+    const index = window.carousel?.activeIndex ?? 0;
+    const url = buildUrlForSlide(index, { includeProject: true });
+    const shareUrl = window.location.origin + url;
+
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      const original = btn.innerHTML;
+      btn.innerHTML = '🔗 Link Copied!';
+      btn.style.pointerEvents = 'none';
+      setTimeout(() => { btn.innerHTML = original; btn.style.pointerEvents = 'auto'; }, 2500);
+    });
+  }
+</script>
+
+</body>  
 </html>
