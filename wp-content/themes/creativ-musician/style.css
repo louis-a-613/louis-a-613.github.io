@@ -3975,6 +3975,10 @@ p a {
     margin-right: auto;
 }
 
+.cb-loading {
+    visibility: hidden;
+}
+
 /* --- Music page accordion scrollbar --- */
 
 #accordion-item-6-panel {

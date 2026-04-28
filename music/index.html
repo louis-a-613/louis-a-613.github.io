@@ -718,7 +718,7 @@ body.custom-background { background-color: #0a0a0a; }
 
 
 <div class="wp-block-column is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:75%">
-<div class="wp-block-cb-carousel-v2 cb-carousel-block cb-single-slide discography" data-cb-slides-per-view="1" data-cb-slides-per-group="1" data-cb-space-between="5" data-cb-breakpoints="{&quot;768&quot;:{&quot;slidesPerView&quot;:1,&quot;slidesPerGroup&quot;:1}}"><div class="swiper"><div class="cb-wrapper swiper-wrapper">
+<div class="wp-block-cb-carousel-v2 cb-carousel-block cb-single-slide cb-loading discography" data-cb-slides-per-view="1" data-cb-slides-per-group="1" data-cb-space-between="5" data-cb-breakpoints="{&quot;768&quot;:{&quot;slidesPerView&quot;:1,&quot;slidesPerGroup&quot;:1}}"><div class="swiper"><div class="cb-wrapper swiper-wrapper">
 <div class="wp-block-cb-slide-v2 cb-slide swiper-slide">
 <p class="has-text-align-center has-huge-font-size">Fit Check</p>
 
@@ -1916,6 +1916,8 @@ body.custom-background { background-color: #0a0a0a; }
     } else {
       resetDocumentMetadataToDefaults();
     }
+
+    document.querySelector('.wp-block-cb-carousel-v2')?.classList.remove('cb-loading');
   }
 
   const HISTORY_TAG = 'loui-song';
