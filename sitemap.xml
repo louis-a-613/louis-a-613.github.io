@@ -3,20 +3,20 @@
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
   <url>
     <loc>https://louis-a.com/</loc>
-    <lastmod>2026-06-26</lastmod>
+    <lastmod>2026-07-31</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://louis-a.com/music/</loc>
-    <lastmod>2026-06-26</lastmod>
+    <lastmod>2026-07-31</lastmod>
     <priority>0.8</priority>
     <video:video>
-      <video:thumbnail_loc>https://i.ytimg.com/vi/uHC4Lx2w48o/hqdefault.jpg</video:thumbnail_loc>
-      <video:title>XOXO2</video:title>
-      <video:description>Official audio for "XOXO2" by Louis Λ. Stream the full song and read the lyrics at https://louis-a.com/music/.</video:description>
-      <video:content_loc>https://www.youtube.com/watch?v=uHC4Lx2w48o</video:content_loc>
-      <video:player_loc allow_embed="yes">https://www.youtube.com/embed/uHC4Lx2w48o</video:player_loc>
-      <video:publication_date>2026-06-26T00:00:00-04:00</video:publication_date>
+      <video:thumbnail_loc>https://i.ytimg.com/vi/kcgl5IN6i1M/hqdefault.jpg</video:thumbnail_loc>
+      <video:title>Thank Gods</video:title>
+      <video:description>Official audio for "Thank Gods" by Louis Λ. Stream the full song and read the lyrics at https://louis-a.com/music/.</video:description>
+      <video:content_loc>https://www.youtube.com/watch?v=kcgl5IN6i1M</video:content_loc>
+      <video:player_loc allow_embed="yes">https://www.youtube.com/embed/kcgl5IN6i1M</video:player_loc>
+      <video:publication_date>2026-07-31T00:00:00-04:00</video:publication_date>
       <video:family_friendly>no</video:family_friendly>
       <video:live>no</video:live>
       <video:requires_subscription>no</video:requires_subscription>
